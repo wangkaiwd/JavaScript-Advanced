@@ -51,3 +51,19 @@ function f1 (c) {
 ### 闭包
 
 闭包：如果在函数里面可以访问函数外面的变量，那么这个函数 + 这些变量 = 闭包
+
+### `this`面试题
+
+将隐式`this`转换为显式`this`:  
+```js
+fn(1,2)
+// fn.call(undefined, 1, 2)
+
+obj.say('hi')
+// obj.say.call(obj, 'hi')
+
+array[0]('hi')
+// array[0].call(array, 'hi')
+```
+
+
