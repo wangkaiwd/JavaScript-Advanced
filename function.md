@@ -66,4 +66,42 @@ array[0]('hi')
 // array[0].call(array, 'hi')
 ```
 
+#### 测试题
+> 下边代码中`this`的会分别打印什么？
 
+* 测试一
+```js
+button.onclick = function(e) {
+  console.log(this);
+}
+```
+
+* 测试二
+```js
+const vm = new Vue({
+  data() {
+    return {
+      message: 'hi'    
+    } 
+  },
+  methods: {
+    sayHi(){
+      console.log(this.message);
+    }
+  }
+})
+```
+* 测试三
+```js
+let length = 10;
+function fn() {
+  console.log(this.length);
+}
+let obj = {
+  length: 5,
+  method(fn) {
+    fn()
+    arguments[0]()
+  }
+}
+```
