@@ -1,5 +1,9 @@
 ## 函数
 
+### 函数的一些相关知识
+* `函数名.length`
+* `arguments.length`
+
 ### 数学中的函数
 传入同样的`x`一定会得到同样的`y`
 
@@ -126,7 +130,9 @@ let obj = {
 * `useCallback`
 
 ### 柯理化
+> 柯理化(英语:`Currying`)：是把接受多个参数的函数变换成接受一个单一参数(最初函数的第一个参数)的函数，并且返回接受余下的参数而且返回结果的新函数的技术
 
+下面我们通过测试题来在代码层面理解柯理化
 #### 面试题  
 
 如何把三参函数`add(1,2,3)`变成`curriedAdd(1)(2)(3)`形式？
@@ -151,3 +157,20 @@ currify(addFour)(1)(2)(3)(4) // 10
 也就是说`currify`能将任意接受固定个参数的函数，变成单一参数的函数的层层调用
 
 那如果我们传入的函数接受的参数并不固定，我们该怎么做？
+
+### 高阶函数
+```js
+const bind = Function.prototype.bind
+const apply = Function.prototype.apply
+const call = Function.prototype.call
+```
+理解函数调用：  
+* `bind.call`
+* `apply.call`
+* `call.call`
+
+函数组合
+
+由于函数组合写起来不是很方便，我们可以使用`Ramda.js`中的`compose`来优化写法
+
+而在为未来的`JavaScript`语法中也可以通过`pipe`来更好的书写函数组合
