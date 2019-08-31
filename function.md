@@ -113,3 +113,41 @@ let obj = {
 #### 递归优化
 * 尾递归
 * 记忆化函数
+
+`JavaScript`中没有尾递归
+
+用数组实现斐波那契数列：  
+```js
+
+```
+
+通过记忆化函数来减少重复计算(`React`)：
+* `memo`
+* `useCallback`
+
+### 柯理化
+
+#### 面试题  
+
+如何把三参函数`add(1,2,3)`变成`curriedAdd(1)(2)(3)`形式？
+```js
+const add = (a,b,c) => a + b + c
+
+const curriedAdd = a => b => c => add(a,b,c) 
+```
+
+假设：  
+* `addTwo` 接受俩个参数
+* `addThree` 接受三个参数
+* `addFour` 接受四个参数
+
+请写出一个`currify`函数，使得它们分别接受2,3,4次参数,如：  
+```js
+currify(addTwo)(1)(2) // 3
+currify(addThree)(1)(2)(3) // 6
+currify(addFour)(1)(2)(3)(4) // 10
+```
+
+也就是说`currify`能将任意接受固定个参数的函数，变成单一参数的函数的层层调用
+
+那如果我们传入的函数接受的参数并不固定，我们该怎么做？
