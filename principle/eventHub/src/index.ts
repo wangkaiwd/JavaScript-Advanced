@@ -9,18 +9,17 @@ class EventHub {
   cache: CacheProps[] = [];
 
   on (eventName: string, fn: (data?: unknown) => void) {
-    if (this.cache[eventName]) {
-      this.cache[eventName].push(fn);
-    } else {
-      this.cache[eventName] = [fn];
-    }
+    this.cache[eventName] = this.cache[eventName] || [];
+    this.cache[eventName].push(fn);
   }
 
   emit (eventName: string, data?: unknown) {
     if (!this.cache[eventName]) return;
-    this.cache[eventName].forEach(fn => {
-      fn(data);
-    });
+    this.cache[eventName].forEach(fn => fn(data));
+  }
+
+  off (eventName: string, fn: (data?: unknown) => void) {
+
   }
 }
 export default EventHub;
