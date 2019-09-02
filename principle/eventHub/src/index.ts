@@ -1,12 +1,12 @@
 interface CacheProps {
-  [key: string]: ((data?: unknown) => void)[]
+  [key: string]: Array<((data?: unknown) => void)>;
 }
 class EventHub {
-  // [
-  //   {'test1':[f1,f2,f3]}
-  //   {'test2':[f1,f2,f3]}
-  // ]
-  cache: CacheProps[] = [];
+  //  {
+  //  'test1':[f1,f2,f3],
+  //  'test2':[f1,f2,f3]
+  //  }
+  private cache: CacheProps = {};
 
   on (eventName: string, fn: (data?: unknown) => void) {
     this.cache[eventName] = this.cache[eventName] || [];
@@ -15,7 +15,7 @@ class EventHub {
 
   emit (eventName: string, data?: unknown) {
     if (!this.cache[eventName]) return;
-    this.cache[eventName].forEach(fn => fn(data));
+    this.cache[eventName].forEach((fn: (data?: unknown) => void) => fn(data));
   }
 
   off (eventName: string, fn: (data?: unknown) => void) {

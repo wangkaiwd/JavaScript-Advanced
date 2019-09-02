@@ -1,7 +1,7 @@
-import EventHub from '../src';
+import EventHub from '../src/index';
 
 const eventHub = new EventHub();
-eventHub.on('test1', (data) => {
+eventHub.on('test1', (data: unknown) => {
   console.log('data', data);
 });
 
