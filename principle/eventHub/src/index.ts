@@ -1,11 +1,8 @@
 interface CacheProps {
+  // unknown是一个安全的any,他一旦被分配类型后就不能再更改
   [key: string]: Array<((data?: unknown) => void)>;
 }
 class EventHub {
-  //  {
-  //  'test1':[f1,f2,f3],
-  //  'test2':[f1,f2,f3]
-  //  }
   private cache: CacheProps = {};
 
   on (eventName: string, fn: (data?: unknown) => void) {
@@ -14,14 +11,14 @@ class EventHub {
   }
 
   emit (eventName: string, data?: unknown) {
-    if (!this.cache[eventName]) return;
-    this.cache[eventName].forEach((fn: (data?: unknown) => void) => fn(data));
+    // if (!this.cache[eventName]) return;
+    // this.cache[eventName].forEach((fn: (data?: unknown) => void) => fn(data));
+    (this.cache[eventName] || []).forEach((fn: (data?: unknown) => void) => fn(data));
   }
 
   off (eventName: string, fn: (data?: unknown) => void) {
     if (!this.cache[eventName]) return;
     const index = indexOf(this.cache[eventName], fn);
-    console.log('index', index);
     if (index === -1) return;
     this.cache[eventName].splice(index, 1);
   }
