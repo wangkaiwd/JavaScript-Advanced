@@ -19,8 +19,20 @@ class EventHub {
   }
 
   off (eventName: string, fn: (data?: unknown) => void) {
-
+    if (!this.cache[eventName]) return;
+    const index = indexOf(this.cache[eventName], fn);
+    console.log('index', index);
+    if (index === -1) return;
+    this.cache[eventName].splice(index, 1);
   }
 }
 export default EventHub;
 
+const indexOf = (array: any[], item: any) => {
+  for (let i = 0; i < array.length; i++) {
+    if (item === array[i]) {
+      return i;
+    }
+  }
+  return -1;
+};
