@@ -12,7 +12,7 @@ const ele = document.getElementById('selector')
 ele.addEventListener('click',() => console.log('click'))
 // 可以订阅多个相同事件
 ele.addEventListener('click',() => console.log('click2'))
-// 可以取消订阅，这里必须要使用具名函数
+// 可以取消订阅，这里必须要使用与订阅时相同的函数
 ele.removeEventListener('click',handler)
 ```
 上边的代码其实就是发布订阅模式，我们可以订阅`DOM`元素的一些事件，当用户执行相应的操作时会发布事件。当然我们也可以手动来取消对事件的订阅。
@@ -146,5 +146,33 @@ class EventHub {
 成功完成前2个需求。
 
 ### 实现`off`方法
+`off`方法需要在`emit`方法发布前调用，来`on`方法订阅事件函数的执行：
+```typescript
+class EventHub {
+  ...
+  off (eventName: string, fn: (data?: unknown) => void) {
+    if (!this.cache[eventName]) return;
+    const index = indexOf(this.cache[eventName], fn);
+    if (index === -1) return;
+    this.cache[eventName].splice(index, 1);
+  }
+  ...
+}
+```  
+`off`方法会将对应订阅事件函数数组中的需要取消订阅的函数删除，这里需要我们传入与**`on`方法进行订阅时相同的函数**，所以我们不能再传入匿名函数。
 
 
+自己实现`indexOf`方法：  
+```typescript
+const indexOf = (array: any[], item: any) => {
+  for (let i = 0; i < array.length; i++) {
+    if (item === array[i]) {
+      return i;
+    }
+  }
+  return -1;
+};
+```
+
+到这里我们成功通过全部测试：  
+![](https://raw.githubusercontent.com/wangkaiwd/drawing-bed/master/advanced-js-eventHub-all-test.png)
