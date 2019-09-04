@@ -1,6 +1,10 @@
 ## 实现`eventHub`
 > 这里会用`TypeScript`来实现对应的功能，如果有小伙伴不熟悉的话可以去官网查看基础语法：[基础类型](https://www.tslang.cn/docs/handbook/basic-types.html)
 
+需要依赖：  
+* `typescript`
+* `ts-node`
+
 ### 什么是`eventHub`
 我们先看一段`dom`操作的代码：  
 ```js
@@ -41,6 +45,7 @@ eventHub.on()   // 订阅
 eventHub.emit() // 发布
 eventHub.off()  // 取消订阅
 ```
+> 我们可以在根目录执行`npx tsc --init`来生成`tsconfig.json`来启用`strict`配置，让我们的`TypeScript`不能使用隐式的`any`
 
 根据需求我们可以编写如下测试代码：  
 
@@ -100,7 +105,46 @@ class EventHub {
 export default EventHub
 ```
 
-这里我们其实已经满足了第一个测试用例，接下来我们实现`on`方法。
+这里我们其实已经满足了第一个测试用例，接下来我们实现`on`方法和`emit`方法。
 
-### `on`方法实现
+### `on`方法和`emit`实现
+`on`是用来进行事件订阅的，我们可以为某一个事件订阅多个方法。这里我们需要声明一个全局变量来存储订阅的事件以及其对应的执行函数
+```typescript
+interface CacheProps {
+  // unknown是一个安全的any,他一旦被分配类型后就不能再更改
+  [key: string]: Array<((data?: unknown) => void)>;
+}
+class EventHub {
+  private cache: CacheProps = {};
+  on (eventName: string, fn: (data?: unknown) => void) {
+    this.cache[eventName] = this.cache[eventName] || [];
+    this.cache[eventName].push(fn);
+  }
+}
+```
+
+上边代码通过`on`方法将事件名作为`key`值，将事件名对应的函数作为`value`值存入到`cache`对象中，这样会方便我们之后的事件发布。
+
+接下来我们通过`emit`方法进行事件发布,我们需要传入对应的事件名和事件触发时对应函数执行的参数：  
+```typescript
+class EventHub {
+  ...
+  emit (eventName: string, data?: unknown) {
+    // if (!this.cache[eventName]) return;
+    // this.cache[eventName].forEach((fn: (data?: unknown) => void) => fn(data));
+    (this.cache[eventName] || []).forEach((fn: (data?: unknown) => void) => fn(data));
+  }
+  ...
+}
+```
+`emit`方法会将所有`on`方法中对应订阅事件的所有函数执行，并在执行时传入对应的参数。
+
+到这里我们已经实现了发布订阅功能，命令行输入： `npx ts-node test/index.ts`
+
+![](https://raw.githubusercontent.com/wangkaiwd/drawing-bed/master/advanced-js-eventHub-test-onemit.png)
+
+成功完成前2个需求。
+
+### 实现`off`方法
+
 
