@@ -35,3 +35,72 @@ methods: {
 * 通过测试
 * 重构之前的代码
 
+`eventHub`的`api`如下：  
+```text
+eventHub.on()   // 订阅
+eventHub.emit() // 发布
+eventHub.off()  // 取消订阅
+```
+
+根据需求我们可以编写如下测试代码：  
+
+```typescript
+import EventHub from '../src/index';
+
+const test1 = (message: string): void => {
+  const eventHub = new EventHub();
+  console.assert(eventHub instanceof Object);
+  console.log(message);
+};
+
+const test2 = (message: string): void => {
+  const eventHub = new EventHub();
+  let called = false;
+  eventHub.on('test2', (data: unknown) => {
+    called = true;
+    console.assert(data === 'test2 params');
+  });
+  eventHub.emit('test2', 'test2 params');
+  console.assert(called);
+  console.log(message);
+};
+
+const test3 = (message: string): void => {
+  const eventHub = new EventHub();
+  let called = false;
+  const fn = (data: unknown) => {
+    called = true;
+    console.assert(data === 'test3 params');
+  };
+  eventHub.on('test3', fn);
+  eventHub.off('test3', fn);
+  eventHub.emit('test3', 'test3 params');
+  console.assert(!called);
+  console.log(message);
+};
+
+test1('eventHub是一个对象');
+test2('.on之后，.emit会触发.on传入的函数');
+test3('.off可以取消.emit触发的事件');
+```
+
+我们的源码现在是这样：  
+```typescript
+class EventHub {
+  on() {
+  
+  }
+  emit(){
+  
+  }
+  off() {
+  
+  }
+}
+export default EventHub
+```
+
+这里我们其实已经满足了第一个测试用例，接下来我们实现`on`方法。
+
+### `on`方法实现
+
