@@ -121,7 +121,12 @@ for (let i = 0; i < 6; i++) {
 
 ### `this`面试题
 
-`this`是调用时的隐式的参数。
+普通函数的`this`是调用时的隐式的参数。
+
+我们看一下`mdn`中如何描述`call`的第一个参数:  
+> 在`fun`函数运行时指定的`this`值。
+> * `null/undefined` => `window`
+> * `number/boolean/string` => `new Number/Boolean/String`
 
 将隐式`this`转换为显式`this`:  
 ```js
@@ -131,9 +136,11 @@ fn(1,2)
 obj.say('hi')
 // obj.say.call(obj, 'hi')
 
-array[0]('hi')
+array[0]('hi') // array.0('hi')
 // array[0].call(array, 'hi')
 ```
+
+之后我们完成一些测试题
 
 #### 测试题
 > 下边代码中`this`的会分别打印什么？
@@ -144,6 +151,30 @@ button.onclick = function(e) {
   console.log(this);
 }
 ```
+<details>
+  <summary>答案</summary>
+  
+  这里的`this`指向不确定，我们要看函数是如何调用的
+  
+  如果是通过用户点击`button`通过浏览器来触发函数，那么浏览器会将`this`指向`button`(将`button`作为`call`方法的第一个参数传入)
+  
+  如果是用户手动调用的话，大概有以下几种情况：  
+  ```js
+  const button = document.querySelector('button')
+  button.onclick = function() {
+    console.log(this)
+  }
+  // 一
+  button.onclick() // button.onclick.call(button)  => this 指向 button
+
+  // 二
+  const f = button.onclick
+  f() // f.call(undefined) => this 指向 window
+  
+  // 三
+  button.onclick.call({name:'wk',age:12}) // this 指向 {name:'wk',age:12}
+  ```
+</details>
 
 * 测试二
 ```js
