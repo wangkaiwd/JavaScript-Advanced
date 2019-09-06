@@ -215,6 +215,8 @@ let obj = {
   }
 }
 obj.method(fn,1)
+const f = obj.method
+f(fn,1)
 ```
 <details>
   <summary>答案</summary>
