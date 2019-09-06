@@ -191,8 +191,18 @@ const vm = new Vue({
   }
 })
 ```
+<details>
+  <summary>答案</summary>
+  
+  这里的`this`指向不确定，我们要看函数是如何调用的
+  
+  如果是在`template`中通过方法名调用，那么`this`指向为`vm`实例。
+  
+  否则我们可以在调用中改变`this`指向，`vm.sayHi.call(something)`可以指定`this`
+</details>
 * 测试三
 ```js
+// 位于函数或代码顶部的var声明会给全局对象新增属性，而let不会
 let length = 10;
 function fn() {
   console.log(this.length);
@@ -204,7 +214,16 @@ let obj = {
     arguments[0]()
   }
 }
+obj.method(fn,1)
 ```
+<details>
+  <summary>答案</summary>
+  
+  ```text
+  1. window.length => 当前窗口中包含的框架数量(框架包括`frame`和`iframe`俩种元素)
+  2. arguments.length => 函数调用时的参数个数： 2
+  ```
+</details>
 
 ### 递归和调用栈
 * 阶乘
