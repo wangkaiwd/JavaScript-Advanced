@@ -14,5 +14,18 @@ const myBind = function (this: AnyFunction, context: any, ...args1: any[]) {
     return fn.call(context, ...args1, ...args2);
   };
 };
+
 Function.prototype.myBind = myBind;
 export default myBind;
+
+const _bind = function (this: AnyFunction) {
+  const slice = Array.prototype.slice,
+    context: any = arguments[0],
+    args1: any[] = slice.call(arguments, 1),
+    fn = this;
+  if (typeof fn !== 'function') throw new Error('只有函数才能调用bind!');
+  return function () {
+    const args2: any[] = slice.call(arguments);
+    return fn.call(context, args1.concat(args2));
+  };
+};
