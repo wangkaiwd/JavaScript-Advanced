@@ -2,12 +2,11 @@
 // @see: https://stackoverflow.com/questions/41773168/define-prototype-function-with-typescript?rq=1
 // ts中文文档：https://www.tslang.cn/docs/handbook/declaration-merging.html
 // ts英文文档：https://www.typescriptlang.org/docs/handbook/declaration-merging.htmlt
-Function.prototype.myBind = () => {
 
+const myBind = (context: any, p1?: any, p2?: any) => {
+  return () => {
+
+  };
 };
-
-const fn = () => {
-
-};
-
-console.log('bind', fn.myBind);
+Function.prototype.myBind = myBind;
+export default myBind;

@@ -39,3 +39,4 @@ const test3 = (message: string): void => {
 test1('eventHub是一个对象');
 test2('.on之后，.emit会触发.on传入的函数');
 test3('.off可以取消.emit触发的事件');
+export {};
