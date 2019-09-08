@@ -3,9 +3,15 @@
 // ts中文文档：https://www.tslang.cn/docs/handbook/declaration-merging.html
 // ts英文文档：https://www.typescriptlang.org/docs/handbook/declaration-merging.htmlttype
 type AnyFunction = (...args: any[]) => any
-const myBind = function (this: AnyFunction, context: any, p1?: any, p2?: any) {
-  return (): AnyFunction => {
-    return this.call(context);
+const myBind = function (this: AnyFunction, context: any, ...args1: any[]) {
+  // return (...args2: any[]): AnyFunction => {
+  //   return this.call(context, ...args1, ...args2);
+  // };
+  // 这里的this是调用bind的函数
+  const fn = this;
+  return function (...args2: any[]): AnyFunction {
+    // 由于不是箭头函数，这里还会有新的this
+    return fn.call(context, ...args1, ...args2);
   };
 };
 Function.prototype.myBind = myBind;
