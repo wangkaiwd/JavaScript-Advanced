@@ -29,3 +29,9 @@ const _bind = function (this: AnyFunction) {
     return fn.call(context, args1.concat(args2));
   };
 };
+Function.prototype._bind = _bind;
+const fn1 = function (this: any) {
+  return this;
+};
+const newFn1 = fn1._bind({ name: 'wk', age: 12 });
+console.log('newFn1', newFn1());
