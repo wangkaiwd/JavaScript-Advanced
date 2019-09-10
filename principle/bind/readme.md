@@ -23,7 +23,7 @@ const args = [...arguments];
 ### `TypeScript`声明合并
 这里我们在通过在`Function`的原型上新添加一个`myBind`方法来实现`bind`方法对应的功能。
 
-由于我们用到了`TypeScript`,直接在`Function.prototype`上添加方法会报错，这里我们用到一个声明合并的概念。
+由于我们用到了`TypeScript`,直接在`Function.prototype`上添加方法会报错，这里我们用到声明合并的概念。
 
 * [文档链接](https://www.tslang.cn/docs/handbook/declaration-merging.html)
 * `stackoverflow`也有对应的解决方法： [define prototype function with typescript](https://stackoverflow.com/questions/41773168/define-prototype-function-with-typescript?rq=1)
@@ -38,7 +38,7 @@ const args = [...arguments];
 type AnyFunction = (...args: any[]) => any
 interface Function {
   // 剩余参数可以表示一个可以传入任意参数(参数类型和参数个数)的函数
-  myBind: <T>(context: any, ...args: T[]) => (AnyFunction)
+  myBind: <T>(context?: any, ...args: T[]) => (AnyFunction)
 }
 ```
 
@@ -57,3 +57,42 @@ interface Function {
 
 这样写了之后，`TypeScript`会将我们定义的`Function`和`TypeScript`自己定义的`Function`接口里的属性和方法进行合并，之后我们就可以使用自己定义的`myBind`方法
 
+### `es6`语法实现
+我们先定义测试函数：  
+```typescript
+const fn = function (this: any, ...args: any[]): any {
+  console.log('this', this);
+  return args;
+};
+```
+测试函数会打印执行时的`this`并且返回执行时传入的参数。
+
+接下来我们使用`fn`调用`myBind`方法:  
+```typescript
+const newFn = fn.myBind({ name: 'wk', age: 12 });
+console.log('newFn', newFn(1, 2, 3, 4));
+```
+
+我们期望的输出结果：  
+```text
+{ name: 'wk', age: 12 }
+[1,2,3,4]
+```
+
+在了解需求后我们实现`bind`方法：  
+```typescript
+type AnyFunction = (...args: any[]) => any
+const myBind = function (this: AnyFunction, context?: any, ...args1: any[]) {
+  // return (...args2: any[]): AnyFunction => {
+  //   return this.call(context, ...args1, ...args2);
+  // };
+  // 这里的this是调用bind的函数
+  const fn = this;
+  return function (...args2: any[]): AnyFunction {
+    // 由于不是箭头函数，这里还会有新的this
+    return fn.call(context, ...args1, ...args2);
+  };
+};
+
+Function.prototype.myBind = myBind;
+```

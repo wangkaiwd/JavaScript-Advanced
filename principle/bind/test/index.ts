@@ -7,7 +7,7 @@ const fn = function (this: any, ...args: any[]): any {
   return args;
 };
 
-const newFn = fn.myBind({ name: 'wk', age: 12 });
+const newFn = fn.myBind();
 console.log('newFn', newFn(1, 2, 3, 4));
 
 export {};
