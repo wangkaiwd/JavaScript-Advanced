@@ -28,7 +28,7 @@ const _bind = function (this: AnyFunction) {
   if (typeof fn !== 'function') throw new Error('只有函数才能调用bind!');
   return function () {
     var args2: any[] = slice.call(arguments);
-    return fn.call(context, args1.concat(args2));
+    return fn.apply(context, args1.concat(args2));
   };
 };
 Function.prototype._bind = _bind;
@@ -37,3 +37,10 @@ Function.prototype._bind = _bind;
 // };
 // const newFn1 = fn1._bind({ name: 'wk', age: 12 });
 // console.log('newFn1', newFn1());
+
+// new 运算符创建一个用户定义的对象类型的实例或具有构造函数的内置对象的实例。
+// new 关键字会执行如下操作：
+// 1. 创建一个空的简单JavaScript对象(即{})
+// 2. 链接该对象(即设置该对象的构造函数)到另一个对象
+// 3. 将步骤1新创建的对象作为this的上下文
+// 4. 如果该函数没有返回对象，则返回this

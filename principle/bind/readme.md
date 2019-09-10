@@ -96,3 +96,18 @@ const myBind = function (this: AnyFunction, context?: any, ...args1: any[]) {
 
 Function.prototype.myBind = myBind;
 ```
+
+### `bind`后的函数通过`new`命令执行
+首先看下`new`的定义：  
+> `new`运算符创建一个用户定义的对象类型的实例或具有构造函数的内置对象的实例
+
+定义一个构造函数：  
+```typescript
+const Person = function (this: any, name: string, age: number) {
+  this.name = name;
+  this.age = age;
+  this.sex = 'male';
+};
+
+const person = new (Person('wk', 12) as any);
+```
