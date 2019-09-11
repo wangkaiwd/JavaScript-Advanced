@@ -133,3 +133,15 @@ this.sex = 'male'
 // 用户没有手动返回对象的话，默认返回this
 return this
 ```
+
+当我们对`bind`绑定过的函数使用`new`操作符时，原来提供的`this`就会被忽略，不过提供的参数列表仍然会插入到构造函数调用时的参数列表之前：  
+```javascript
+var fn = function(a,b) {
+    console.log('this',this);
+	this.a = a
+	this.b = b
+}
+var object = new (fn.bind({ name:'wk',age: 12 } ,2 ,3 ))
+
+console.log(object);
+```
