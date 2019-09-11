@@ -15,8 +15,6 @@ const myBind = function (this: AnyFunction, context?: any, ...args1: any[]) {
     return fn.call(context, ...args1, ...args2);
   };
 };
-
-Function.prototype.myBind = myBind;
 export default myBind;
 
 // es5 语法
