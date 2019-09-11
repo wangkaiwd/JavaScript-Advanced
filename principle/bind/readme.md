@@ -111,3 +111,25 @@ const Person = function (this: any, name: string, age: number) {
 
 const person = new (Person('wk', 12) as any);
 ```
+
+`new`关键字会进行如下操作：  
+1. 创建一个空的简单`JavaScript`对象(即`{}`)
+2. 链接该对象(即设置该对象的构造函数)到另一个对象
+3. 将步骤1新创建的对象作为`this`的上下文
+4. 如果该函数没有返回对象，则返回`this`
+
+使用代码来表示大概是这样(以上边的`Person`函数为例)：  
+```javascript
+// 1. 创建一个空的简单`JavaScript`对象(即`{}`)
+const temp = {}
+// 2. 链接该对象(即设置该对象的构造函数)到另一个对象
+temp.__proto__ = Person.prototype
+// 3. 将步骤1新创建的对象作为`this`的上下文
+this = temp
+// 为this指定属性
+this.name = name
+this.age = age
+this.sex = 'male'
+// 用户没有手动返回对象的话，默认返回this
+return this
+```
