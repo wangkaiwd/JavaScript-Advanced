@@ -143,5 +143,7 @@ var fn = function(a,b) {
 }
 var object = new (fn.bind({ name:'wk',age: 12 } ,2 ,3 ))
 
-console.log(object);
+console.log('object',object);
+// this {a:2, b:3}
+// object {a:2, b:3}
 ```
