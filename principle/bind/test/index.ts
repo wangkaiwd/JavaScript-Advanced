@@ -24,7 +24,7 @@ const test2 = (message: string) => {
   // FIXME:这里 new 会报错，暂时先将类型设置为any,因为没有找到更好的方法
   // @see: https://stackoverflow.com/questions/43623461/new-expression-whose-target-lacks-a-construct-signature-in-typescript
   const object = new (fn1 as any)();
-  console.log('object', object.p1);
+  console.log('object', object);
 };
 test2('new 的时候绑定了p1, p2');
 export {};

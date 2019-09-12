@@ -10,10 +10,15 @@ const myBind = function (this: AnyFunction, context?: any, ...args1: any[]) {
   // };
   // 这里的this是调用bind的函数
   const fn = this;
-  return function (...args2: any[]): AnyFunction {
+
+  function resultFn (this: any, ...args2: any[]): AnyFunction {
     // 由于不是箭头函数，这里还会有新的this
-    return fn.call(context, ...args1, ...args2);
+    // const isUseNew = this.__proto__ === resultFn.prototype; // 这样写会存在问题？
+    // 说明返回的resultFn被当做new的构造函数调用
+    const isUseNew = this instanceof resultFn;
+    return fn.call(isUseNew ? this : context, ...args1, ...args2);
   };
+  return resultFn;
 };
 export default myBind;
 
@@ -24,9 +29,10 @@ const _bind = function (this: AnyFunction) {
     args1: any[] = slice.call(arguments, 1),
     fn = this;
   if (typeof fn !== 'function') throw new Error('只有函数才能调用bind!');
-  return function () {
+  return function resultFn (this: any) {
     var args2: any[] = slice.call(arguments);
-    return fn.apply(context, args1.concat(args2));
+    const isUseNew = this instanceof resultFn;
+    return fn.apply(isUseNew ? this : context, args1.concat(args2));
   };
 };
 Function.prototype._bind = _bind;
