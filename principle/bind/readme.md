@@ -137,13 +137,22 @@ return this
 当我们对`bind`绑定过的函数使用`new`操作符时，原来提供的`this`就会被忽略，不过提供的参数列表仍然会插入到构造函数调用时的参数列表之前：  
 ```javascript
 var fn = function(a,b) {
-    console.log('this',this);
-	this.a = a
-	this.b = b
+  console.log('this',this);
+  this.a = a
+  this.b = b
 }
 var object = new (fn.bind({ name:'wk',age: 12 } ,2 ,3 ))
 
 console.log('object',object);
 // this {a:2, b:3}
 // object {a:2, b:3}
+```
+
+根据`new`关键字的作用以及`bind`结合`new`关键字使用的例子我们可以得到如下结论：  
+
+**使用`new`关键字时，`bind`中绑定的`this`不会生效，还会使用调用`bind`的函数中的`this`**
+
+那么当对`bind`后的函数执行`new`关键字时的判断如下：  
+```typescript
+
 ```
