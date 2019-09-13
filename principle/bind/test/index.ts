@@ -5,17 +5,23 @@ import myBind from '../src';
 
 Function.prototype.myBind = myBind;
 
-const test1 = () => {
-  const fn = function (this: any, ...args: any[]): any {
-    console.log('this', this);
-    return args;
-  };
-
-  const newFn = fn.myBind();
-  console.log('newFn', newFn(1, 2, 3, 4));
+const test1 = (message: string) => {
+  console.log(message);
+  console.assert(Function.prototype.myBind !== undefined);
 };
-
 const test2 = (message: string) => {
+  console.log(message);
+  const fn = function (this: any) {
+    return this;
+  };
+  const newFn = fn.myBind({ name: 'wk' });
+  console.assert(newFn().name === 'wk');
+};
+const test3 = (message: string) => {
+  console.log(message);
+
+};
+const test7 = (message: string) => {
   const fn = function (this: any, p1: number, p2: number): void {
     this.p1 = p1;
     this.p2 = p2;
@@ -26,5 +32,7 @@ const test2 = (message: string) => {
   const object = new (fn1 as any)();
   console.log('object', object);
 };
-test2('new 的时候绑定了p1, p2');
+test1('fn.bind 能用');
+test2('this 绑定成功');
+test7('new 的时候绑定了p1, p2');
 export {};
