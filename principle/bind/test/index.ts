@@ -37,6 +37,17 @@ const test4 = (message: string) => {
   console.assert(p1 === 1, 'test4-p1');
   console.assert(p2 === 2, 'test4-p2');
 };
+const test5 = (message: string) => {
+  console.log(message);
+  const fn1 = function (this: any, p1: any, p2: any) {
+    this.p1 = p1;
+    this.p2 = p2;
+  };
+  const fn2 = fn1.myBind(undefined, 1, 2);
+  const object = new (fn2 as any)();
+  console.assert(object.p1 === 1);
+  console.assert(object.p2 === 2);
+};
 const test7 = (message: string) => {
   const fn = function (this: any, p1: number, p2: number): void {
     this.p1 = p1;
@@ -52,5 +63,7 @@ test1('fn.bind 能用');
 test2('this 绑定成功');
 test3('参数p1,p2绑定成功');
 test4('bind时传p1，之后调用时传p2成功');
+test5('fn.bind 传入p1,p2，通过new执行返回函数后实例上有p1和p2');
+
 test7('new 的时候绑定了p1, p2');
 export {};
