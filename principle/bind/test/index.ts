@@ -19,7 +19,23 @@ const test2 = (message: string) => {
 };
 const test3 = (message: string) => {
   console.log(message);
-
+  const fn = function (p1: any, p2: any) {
+    return [p1, p2];
+  };
+  const newFn = fn.myBind({ name: 'wk' }, 1, 2);
+  const [p1, p2] = newFn();
+  console.assert(p1 === 1, 'test3-p1');
+  console.assert(p2 === 2, 'test3-p2');
+};
+const test4 = (message: string) => {
+  console.log(message);
+  const fn = function (p1: any, p2: any) {
+    return [p1, p2];
+  };
+  const newFn = fn.myBind({ name: 'wk' });
+  const [p1, p2] = newFn(1, 2);
+  console.assert(p1 === 1, 'test4-p1');
+  console.assert(p2 === 2, 'test4-p2');
 };
 const test7 = (message: string) => {
   const fn = function (this: any, p1: number, p2: number): void {
@@ -34,5 +50,7 @@ const test7 = (message: string) => {
 };
 test1('fn.bind 能用');
 test2('this 绑定成功');
+test3('参数p1,p2绑定成功');
+test4('bind时传p1，之后调用时传p2成功');
 test7('new 的时候绑定了p1, p2');
 export {};
