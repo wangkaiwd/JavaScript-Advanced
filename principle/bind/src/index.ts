@@ -13,11 +13,20 @@ const myBind = function (this: AnyFunction, context?: any, ...args1: any[]) {
 
   function resultFn (this: any, ...args2: any[]): AnyFunction {
     // 由于不是箭头函数，这里还会有新的this
-    // const isUseNew = this.__proto__ === resultFn.prototype; // 这样写会存在问题？
+    // const isUseNew = this.__proto__ === resultFn.prototype; // mdn不推荐使用__proto__
     // 说明返回的resultFn被当做new的构造函数调用
+    // instanceof: 用于测试构造函数的prototype属性是否出现在对象的原型链上的任何位置
     const isUseNew = this instanceof resultFn;
+    // 也可以这样写
+    // isPrototypeOf: 用于测试一个对象是否存在于另一个对象的原型链上
+    // resultFn.prototype 是否存在于this的原型链上
+    // const isUserNew = resultFn.prototype.isPrototypeOf(this)
     return fn.call(isUseNew ? this : context, ...args1, ...args2);
   };
+  // 在使用bind的时候，我们是将fn来作为构造函数的，并且在fn.prototype上绑定方法
+  // 而我们最终在使用的时候，却是使用resultFn来作为构造函数的，然后将this传入到fn,
+  // fn会帮我们将参数绑定到this上，但是不会帮我们绑定prototype,因为fn中的this现在已经指定了是外部的this
+  resultFn.prototype = fn.prototype;
   return resultFn;
 };
 export default myBind;
