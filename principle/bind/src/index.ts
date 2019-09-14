@@ -38,11 +38,13 @@ const _bind = function (this: AnyFunction) {
     args1: any[] = slice.call(arguments, 1),
     fn = this;
   if (typeof fn !== 'function') throw new Error('只有函数才能调用bind!');
-  return function resultFn (this: any) {
+  function resultFn (this: any) {
     var args2: any[] = slice.call(arguments);
     const isUseNew = this instanceof resultFn;
     return fn.apply(isUseNew ? this : context, args1.concat(args2));
   };
+  resultFn.prototype = fn.prototype;
+  return resultFn;
 };
 Function.prototype._bind = _bind;
 // const fn1 = function (this: any) {
