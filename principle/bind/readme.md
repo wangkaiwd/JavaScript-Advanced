@@ -112,27 +112,28 @@ const person = new (Person('wk', 12) as any);
 
 `new`关键字会进行如下操作：  
 1. 创建一个空的简单`JavaScript`对象(即`{}`)
-2. 链接该对象(即设置该对象的构造函数)到另一个对象
+2. 将这个空对象的原型指向构造函数的`prototype`属性
 3. 将步骤1新创建的对象作为`this`的上下文
-4. 如果该函数没有返回对象，则返回`this`
+4. 执行构造函数内部的代码
+5. 如果该函数没有返回对象，则返回`this`
 
 使用代码来表示大概是这样(以上边的`Person`函数为例)：  
 ```javascript
 // 1. 创建一个空的简单`JavaScript`对象(即`{}`)
 const temp = {}
-// 2. 链接该对象(即设置该对象的构造函数)到另一个对象
+// 2. 将这个空对象的原型指向构造函数的`prototype`属性
 temp.__proto__ = Person.prototype
 // 3. 将步骤1新创建的对象作为`this`的上下文
 this = temp
-// 为this指定属性
+// 4. 执行构造函数内部的代码
 this.name = name
 this.age = age
 this.sex = 'male'
-// 用户没有手动返回对象的话，默认返回this
+// 5. 用户没有手动返回对象的话，默认返回this
 return this
 ```
 
-当我们对`bind`绑定过的函数使用`new`操作符时，原来提供的`this`就会被忽略，不过提供的参数列表仍然会插入到构造函数调用时的参数列表之前：  
+当我们对`bind`绑定过的函数使用`new`操作符时，原来提供的`this`就会被忽略，不过还是能提前传入调用时的参数列表：  
 ```javascript
 var fn = function(a,b) {
   console.log('this',this);
@@ -147,10 +148,55 @@ console.log('object',object);
 ```
 
 根据`new`关键字的作用以及`bind`结合`new`关键字使用的例子我们可以得到如下结论：  
+* `bind`中绑定的`this`不会生效，还会使用调用`bind`的函数中的`this`
+* 在`bind`绑定时可以提前传入构造函数中需要的参数
 
-**使用`new`关键字时，`bind`中绑定的`this`不会生效，还会使用调用`bind`的函数中的`this`**
-
-那么当对`bind`后的函数执行`new`关键字时的判断如下：  
+那么当对`bind`后的函数是否执行`new`关键字时的判断如下：  
 ```typescript
+type AnyFunction = (...args: any[]) => any
+const myBind = function (this: AnyFunction, context?: any, ...args1: any[]) {
+  const fn = this;
 
+  function resultFn (this: any, ...args2: any[]): AnyFunction {
+    // instanceof: 用于测试构造函数的prototype属性是否出现在对象的原型链上的任何位置
+    const isUseNew = this instanceof resultFn;
+    return fn.call(isUseNew ? this : context, ...args1, ...args2);
+  };
+  // 将添加到fn原型对象上的方法赋值到resultFn的原生对象上
+  resultFn.prototype = fn.prototype;
+  return resultFn;
+};
+```
+我们通过`instanceof`来判断函数是否在执行时使用了`new`，并且将`fn`的原型赋值到`resultFn`的原型上
+
+到这里我们实现了一个支持`new`操作符的`bind`方法：  
+```typescript
+type AnyFunction = (...args: any[]) => any
+// context是可选参数，没有传入的话默认指向window
+const myBind = function (this: AnyFunction, context?: any, ...args1: any[]) {
+  // return (...args2: any[]): AnyFunction => {
+  //   return this.call(context, ...args1, ...args2);
+  // };
+  if (typeof this !== 'function') throw new Error('只能使用函数来调用bind');
+  // 这里的this是调用bind的函数
+  const fn = this;
+
+  function resultFn (this: any, ...args2: any[]): AnyFunction {
+    // 由于不是箭头函数，这里还会有新的this
+    // const isUseNew = this.__proto__ === resultFn.prototype; // mdn不推荐使用__proto__
+    // 说明返回的resultFn被当做new的构造函数调用
+    // instanceof: 用于测试构造函数的prototype属性是否出现在对象的原型链上的任何位置
+    const isUseNew = this instanceof resultFn;
+    // 也可以这样写
+    // isPrototypeOf: 用于测试一个对象是否存在于另一个对象的原型链上
+    // resultFn.prototype 是否存在于this的原型链上
+    // const isUserNew = resultFn.prototype.isPrototypeOf(this)
+    return fn.call(isUseNew ? this : context, ...args1, ...args2);
+  };
+  // 在使用bind的时候，我们是将fn来作为构造函数的，并且在fn.prototype上绑定方法
+  // 而我们最终在使用的时候，却是使用resultFn来作为构造函数的，然后将this传入到fn,
+  // fn会帮我们将参数绑定到this上，但是不会帮我们绑定prototype,因为fn中的this现在已经指定了是外部的this
+  resultFn.prototype = fn.prototype;
+  return resultFn;
+};
 ```

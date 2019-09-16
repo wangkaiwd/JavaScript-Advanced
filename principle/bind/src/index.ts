@@ -8,6 +8,7 @@ const myBind = function (this: AnyFunction, context?: any, ...args1: any[]) {
   // return (...args2: any[]): AnyFunction => {
   //   return this.call(context, ...args1, ...args2);
   // };
+  if (typeof this !== 'function') throw new Error('只能使用函数来调用bind');
   // 这里的this是调用bind的函数
   const fn = this;
 
@@ -38,6 +39,7 @@ const _bind = function (this: AnyFunction) {
     args1: any[] = slice.call(arguments, 1),
     fn = this;
   if (typeof fn !== 'function') throw new Error('只有函数才能调用bind!');
+
   function resultFn (this: any) {
     var args2: any[] = slice.call(arguments);
     const isUseNew = this instanceof resultFn;
