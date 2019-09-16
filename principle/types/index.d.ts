@@ -5,7 +5,7 @@ type AnyFunction = (...args: any[]) => any
 
 interface Function {
   // 剩余参数可以表示一个可以传入任意参数(参数类型和参数个数)的函数
-  myBind: <T>(context?: any, ...args: T[]) => (AnyFunction),
-  _bind: <T>(context?: any, ...args: T[]) => (AnyFunction)
+  myBind: <T>(context?: any, ...args: T[]) => (AnyFunction);
+  _bind: <T>(context?: any, ...args: T[]) => (AnyFunction);
 }
 
