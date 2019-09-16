@@ -15,4 +15,10 @@ describe('MyPromise', () => {
       new MyPromise();
     });
   });
+  it('new Promise(fn) 会生成一个对象，对象有.then方法', () => {
+
+  });
+  it('new Promise(fn) 中传入的fn会立即执行', () => {
+
+  });
 });
