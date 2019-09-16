@@ -1,5 +1,7 @@
 import MyPromise from '../src';
 import { assert } from 'chai';
+import sinon from 'sinon';
+import sinonChai from 'sinon-chai';
 
 describe('MyPromise', () => {
   it('是一个类', () => {
