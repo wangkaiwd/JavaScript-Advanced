@@ -200,3 +200,38 @@ const myBind = function (this: AnyFunction, context?: any, ...args1: any[]) {
   return resultFn;
 };
 ```
+
+### 兼容旧语法
+上边版本的`bind`方法用到了很多新语法，而在有些浏览器并不能很好的兼容这些语法。
+
+为了提高代码的兼容性，我们使用`es5`的相关`api`来实现`bind`，修改内容如下：  
+* `const => var`
+* 用`arguments`来代替剩余参数`...args`
+* 用`concat`来拼接数组
+
+修改之后的代码如下：  
+```typescript
+// es5 语法
+type AnyFunction = (...args: any[]) => any
+const _bind = function (this: AnyFunction) {
+  // 缓存Array原型上的slice
+  var slice = Array.prototype.slice,
+    context: any = arguments[0],
+    // 将arguments通过slice转换为一个真数组
+    args1: any[] = slice.call(arguments, 1),
+    fn = this;
+  if (typeof fn !== 'function') throw new Error('只有函数才能调用bind!');
+
+  function resultFn (this: any) {
+    var args2: any[] = slice.call(arguments);
+    const isUseNew = this instanceof resultFn;
+    return fn.apply(isUseNew ? this : context, args1.concat(args2));
+  };
+  resultFn.prototype = fn.prototype;
+  return resultFn;
+};
+```
+
+这里我们实现一个兼容性较好的版本。
+
+在`mdn`里也有对于`bind`的实现代码，可以用来参考： [传送门](https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Global_Objects/Function/bind#Compatibility)

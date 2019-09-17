@@ -34,8 +34,10 @@ export default myBind;
 
 // es5 语法
 const _bind = function (this: AnyFunction) {
+  // 缓存Array原型上的slice
   var slice = Array.prototype.slice,
     context: any = arguments[0],
+    // 将arguments通过slice转换为一个真数组
     args1: any[] = slice.call(arguments, 1),
     fn = this;
   if (typeof fn !== 'function') throw new Error('只有函数才能调用bind!');
