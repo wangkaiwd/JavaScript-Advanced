@@ -6,7 +6,18 @@
 
 // 传入的类型和返回的类型应该相同
 const deepClone = <T> (source: T): T => {
-  return source;
+  const result: any = undefined;
+  if (isPlainObject(source)) {
+    for (const key in source) {
+      result[key] = deepClone(source[key]);
+    }
+  }
+  return result;
+};
+
+// 类型保护机制：类型谓词: parameterName is Type
+const isPlainObject = (value: any): value is object => {
+  return toString.call(value) === '[object Object]';
 };
 
 export default deepClone;
