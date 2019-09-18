@@ -5,7 +5,7 @@
 // 目前新增：BigInt
 
 // 传入的类型和返回的类型应该相同
-const deepClone = <T = any> (source: T): T => {
+const deepClone = <T> (source: T): T => {
   let result: any = undefined;
   if (isPlainObject(source)) {
     result = {};
