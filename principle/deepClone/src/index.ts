@@ -5,19 +5,33 @@
 // 目前新增：BigInt
 
 // 传入的类型和返回的类型应该相同
-const deepClone = <T> (source: T): T => {
+const deepClone = <T = any> (source: T): T => {
   let result: any = undefined;
   if (isPlainObject(source)) {
     result = {};
     for (const key in source) {
-      console.log('object', result);
-      result[key] = deepClone(source[key]);
+      if (source.hasOwnProperty(key)) {
+        console.log('0', result);
+        result[key] = deepClone(source[key]);
+      }
     }
   } else if (Array.isArray(source)) {
     result = [];
     source.forEach(item => {
       result.push(deepClone(item));
     });
+  } else if (typeof source === 'function') {
+    result = function (this: any) {
+      return source.apply(this, arguments);
+    };
+    for (const key in source) {
+      // result[key] = deepClone(source[key]);
+      // result[key] = deepClone((source as any)[key]);
+      if (source.hasOwnProperty(key)) {
+        console.log('1', result);
+        result[key] = deepClone((source as any)[key]);
+      }
+    }
   } else {
     result = source;
   }

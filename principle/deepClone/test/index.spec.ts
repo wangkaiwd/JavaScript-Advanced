@@ -19,7 +19,14 @@ describe('deepClone', () => {
     it('能够复制数组', () => {
       const o1 = [[1, 2, 3], [4, 5, [6, 7]], 8, 9];
       const o2 = deepClone(o1);
-      console.log('o2', o2);
+      assert.deepStrictEqual(o2, o1);
+    });
+    it('能够复制函数', () => {
+      const o1 = function (x: number, y: number): number {
+        return x + y;
+      };
+      o1.x = { y: { zzz: 111 } };
+      const o2 = deepClone(o1);
       assert.deepStrictEqual(o2, o1);
     });
   });
