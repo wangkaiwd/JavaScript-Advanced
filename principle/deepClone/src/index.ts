@@ -6,11 +6,20 @@
 
 // 传入的类型和返回的类型应该相同
 const deepClone = <T> (source: T): T => {
-  const result: any = undefined;
+  let result: any = undefined;
   if (isPlainObject(source)) {
+    result = {};
     for (const key in source) {
+      console.log('object', result);
       result[key] = deepClone(source[key]);
     }
+  } else if (Array.isArray(source)) {
+    result = [];
+    source.forEach(item => {
+      result.push(deepClone(item));
+    });
+  } else {
+    result = source;
   }
   return result;
 };

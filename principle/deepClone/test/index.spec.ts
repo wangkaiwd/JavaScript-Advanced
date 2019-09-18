@@ -14,9 +14,13 @@ describe('deepClone', () => {
     it('能够复制普通对象', () => {
       const o1 = { value: '1', child: { value: '1-1' } };
       const o2 = deepClone(o1);
-      assert.notStrictEqual(o2, o1);
-      assert.strictEqual(o2.value, o1.value);
-      assert.notStrictEqual(o2.child, o1.child);
+      assert.deepStrictEqual(o2, o1);
+    });
+    it('能够复制数组', () => {
+      const o1 = [[1, 2, 3], [4, 5, [6, 7]], 8, 9];
+      const o2 = deepClone(o1);
+      console.log('o2', o2);
+      assert.deepStrictEqual(o2, o1);
     });
   });
 });
