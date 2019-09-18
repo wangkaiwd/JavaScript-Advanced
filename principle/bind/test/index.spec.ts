@@ -11,40 +11,44 @@ describe('myBind', () => {
   it('Function.prototype.myBind能用', () => {
     assert.notStrictEqual(Function.prototype.myBind, undefined);
   });
+  it('this 绑定成功', () => {
+    const fn = function (this: any) {
+      return this;
+    };
+    const newFn = fn.myBind({ name: 'wk', age: 12 });
+    // deepEqual: 相当于深拷贝
+    // 例：俩个对象不指向同一个引用，但是它们的属性值相同
+    assert.deepStrictEqual(newFn(), { name: 'wk', age: 12 });
+  });
+  it('p1,p2参数绑定成功', () => {
+    const fn = function (this: any, p1: number, p2: number): any[] {
+      return [this, 1, 2];
+    };
+    const context = { name: 'wk', age: 12 };
+    const newFn = fn.myBind(context, 1, 2);
+    assert.deepStrictEqual(newFn(), [context, 1, 2]);
+  });
+  it('先bind绑定this,返回函数传入p1,p2成功', () => {
+    const fn = function (this: any, p1: number, p2: number): any[] {
+      return [this, 1, 2];
+    };
+    const context = { name: 'wk', age: 12 };
+    const newFn = fn.myBind(context);
+    assert.deepStrictEqual(newFn(1, 2), [context, 1, 2]);
+  });
+  it('fn传入p1 p2,返回函数使用new执行时会自动p1 p2', () => {
+    interface Props {
+      p1: number;
+      p2: number;
+    }
+
+    const fn1 = function (this: any, p1: number, p2: number) {
+      this.p1 = p1;
+      this.p2 = p2;
+    };
+  });
 });
 
-const test1 = (message: string) => {
-  console.log(message);
-  console.assert(Function.prototype.myBind !== undefined);
-};
-const test2 = (message: string) => {
-  console.log(message);
-  const fn = function (this: any) {
-    return this;
-  };
-  const newFn = fn.myBind({ name: 'wk' });
-  console.assert(newFn().name === 'wk');
-};
-const test3 = (message: string) => {
-  console.log(message);
-  const fn = function (p1: any, p2: any) {
-    return [p1, p2];
-  };
-  const newFn = fn.myBind({ name: 'wk' }, 1, 2);
-  const [p1, p2] = newFn();
-  console.assert(p1 === 1, 'test3-p1');
-  console.assert(p2 === 2, 'test3-p2');
-};
-const test4 = (message: string) => {
-  console.log(message);
-  const fn = function (p1: any, p2: any) {
-    return [p1, p2];
-  };
-  const newFn = fn.myBind({ name: 'wk' });
-  const [p1, p2] = newFn(1, 2);
-  console.assert(p1 === 1, 'test4-p1');
-  console.assert(p2 === 2, 'test4-p2');
-};
 const test5 = (message: string) => {
   console.log(message);
   const fn1 = function (this: any, p1: any, p2: any) {
@@ -90,10 +94,6 @@ const test7 = (message: string) => {
   console.assert(object1.p2 === 2);
 };
 
-test1('fn.bind 能用');
-test2('this 绑定成功');
-test3('参数p1,p2绑定成功');
-test4('bind时传p1，之后调用时传p2成功');
 test5('fn.bind 传入p1,p2，通过new执行返回函数后实例上有p1和p2');
 test6('new 的时候绑定p1,p2, 并且fn1有prototype.sayHi');
 test7('不用new,但是用类似的对象');
