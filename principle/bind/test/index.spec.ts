@@ -2,8 +2,16 @@
 // import '../src';
 // 如果 myBind 没有被用到的话，就必须要写成 import "../src", 否则不会执行src/index.ts中的代码
 import myBind from '../src';
+import { assert } from 'chai';
 
 Function.prototype.myBind = myBind;
+
+describe('myBind', () => {
+  Function.prototype.myBind = myBind;
+  it('Function.prototype.myBind能用', () => {
+    assert.notStrictEqual(Function.prototype.myBind, undefined);
+  });
+});
 
 const test1 = (message: string) => {
   console.log(message);
