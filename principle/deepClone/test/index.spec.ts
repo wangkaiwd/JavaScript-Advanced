@@ -36,6 +36,7 @@ describe('deepClone', () => {
     it('环也能复制', () => {
 
     });
+    // xit: skip(跳过)这个用例
     xit('不会爆栈', () => {
       const object1: any = {};
       let object2: any = object1;
