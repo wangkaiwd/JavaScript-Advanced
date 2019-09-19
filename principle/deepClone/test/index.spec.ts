@@ -33,5 +33,22 @@ describe('deepClone', () => {
       assert.deepStrictEqual(o2.x, o1.x);
       assert.strictEqual(o2(1, 2), o1(1, 2));
     });
+    it('环也能复制', () => {
+
+    });
+    xit('不会爆栈', () => {
+      const object1: any = {};
+      let object2: any = object1;
+      let i = 0;
+      while (i < 1000) {
+        object2.child = {
+          child: 1
+        };
+        object2 = object2.child;
+        i++;
+      }
+      const copyObject1 = deepClone(object1);
+      assert.deepStrictEqual(copyObject1, object1);
+    });
   });
 });

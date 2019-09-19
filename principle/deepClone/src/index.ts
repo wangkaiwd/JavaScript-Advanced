@@ -4,6 +4,8 @@
 // js数据类型：String Number Boolean Null Undefined Symbol Object
 // 目前新增：BigInt
 
+// 环状结构：对象的某一个属性是自己，如: window.self === window // true
+
 // 传入的类型和返回的类型应该相同
 const deepClone = <T> (source: T): T => {
   let result: any = undefined;
