@@ -11,7 +11,6 @@ const deepClone = <T> (source: T): T => {
     result = {};
     for (const key in source) {
       if (source.hasOwnProperty(key)) {
-        console.log('0', result);
         result[key] = deepClone(source[key]);
       }
     }
@@ -28,7 +27,6 @@ const deepClone = <T> (source: T): T => {
       // result[key] = deepClone(source[key]);
       // result[key] = deepClone((source as any)[key]);
       if (source.hasOwnProperty(key)) {
-        console.log('1', result);
         result[key] = deepClone((source as any)[key]);
       }
     }

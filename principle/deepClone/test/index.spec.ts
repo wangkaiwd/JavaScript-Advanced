@@ -27,7 +27,11 @@ describe('deepClone', () => {
       };
       o1.x = { y: { zzz: 111 } };
       const o2 = deepClone(o1);
-      assert.deepStrictEqual(o2, o1);
+      // @see: https://github.com/chaijs/chai/issues/697#issuecomment-216795189
+      // assert.deepStrictEqual(o2, o1);
+      assert(o2 !== o1);
+      assert.deepStrictEqual(o2.x, o1.x);
+      assert.strictEqual(o2(1, 2), o1(1, 2));
     });
   });
 });
