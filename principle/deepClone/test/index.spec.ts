@@ -62,5 +62,11 @@ describe('deepClone', () => {
       assert(reg2.flags === reg1.flags);
       assert(reg2 !== reg1);
     });
+    it('能复制日期', () => {
+      const date1 = new Date();
+      const date2 = deepClone(date1);
+      assert.strictEqual(date2.getTime(), date1.getTime());
+      assert.notStrictEqual(date2, date1);
+    });
   });
 });

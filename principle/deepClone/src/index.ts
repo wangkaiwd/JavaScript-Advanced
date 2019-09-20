@@ -34,9 +34,16 @@ const deepClone = <T> (source: T): T => {
     }
   } else if (isRegExp(source)) {
     result = new RegExp(source.source, source.flags);
+  } else if (isDate(source)) {
+    result = new Date(source);
   } else {
     result = source;
   }
+  // for (const key in source) {
+  //   if (source.hasOwnProperty(key)) {
+  //     result[key] = deepClone(source[key]);
+  //   }
+  // }
   return result;
 };
 
@@ -47,5 +54,9 @@ const isPlainObject = (value: any): value is object => {
 
 const isRegExp = (value: any): value is RegExp => {
   return toString.call(value) === '[object RegExp]';
+};
+
+const isDate = (value: any): value is Date => {
+  return toString.call(value) === '[object Date]';
 };
 export default deepClone;
