@@ -32,6 +32,8 @@ const deepClone = <T> (source: T): T => {
         result[key] = deepClone((source as any)[key]);
       }
     }
+  } else if (isRegExp(source)) {
+    result = new RegExp(source.source, source.flags);
   } else {
     result = source;
   }
@@ -43,4 +45,7 @@ const isPlainObject = (value: any): value is object => {
   return toString.call(value) === '[object Object]';
 };
 
+const isRegExp = (value: any): value is RegExp => {
+  return toString.call(value) === '[object RegExp]';
+};
 export default deepClone;
