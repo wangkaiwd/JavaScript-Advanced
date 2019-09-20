@@ -8,7 +8,7 @@
     /* Specify module code generation: 'none', 'commonjs', 'amd', 'system', 'umd', 'es2015', or 'ESNext'. 这里为什么要制定commonjs */
     "lib": [
       "dom",
-      "es2015"
+      "esnext"
     ],
     /* Specify library files to be included in the compilation. */
     // "allowJs": true,                       /* Allow javascript files to be compiled. */

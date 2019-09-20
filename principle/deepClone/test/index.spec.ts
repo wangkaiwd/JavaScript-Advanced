@@ -83,5 +83,24 @@ describe('deepClone', () => {
       assert.isFalse('name' in o2);
       assert.strictEqual(o2.age, o1.age);
     });
+    it('复制很复杂的对象', () => {
+      const test = {
+        n1: Infinity,
+        n2: NaN,
+        s: '',
+        reg: /test/gi,
+        n: null,
+        u: undefined,
+        bool: false,
+        sym: Symbol(),
+        date: new Date(),
+      };
+      // Object.values: es2017 support
+      const o1 = { ...test, test, array: [test, ...Object.values(test)] };
+      const o2 = deepClone(o1);
+      // deepStrictEqual 可以测试NaN，NaN应该和任何值都不相等，这里应该做了处理
+      assert.deepStrictEqual(o2, o1);
+      // FIXME: 函数应该如何测试
+    });
   });
 });
