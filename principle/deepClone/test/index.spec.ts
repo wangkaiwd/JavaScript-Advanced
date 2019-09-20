@@ -68,5 +68,20 @@ describe('deepClone', () => {
       assert.strictEqual(date2.getTime(), date1.getTime());
       assert.notStrictEqual(date2, date1);
     });
+    it('不会复制对象原型上的属性和方法', () => {
+      // 创建一个对象,对象的原型对象为{name: 'o1'}
+      // 即: o1.__proto__ = {name: 'o1'}
+      // 也可以传入第二个参数： 自身属性对象的属性描述以及相应的属性名称
+      // const o1 = Object.create({name:'o1'},{foo:{writable:true,configurable:true,value:'hello'}})
+      // {
+      //       foo:'hello',
+      //       __proto__: {name: 'o1', __proto__: Object.prototype}
+      // }
+      const o1 = Object.create({ name: 'o1' });
+      o1.age = 12;
+      const o2 = deepClone(o1);
+      assert.isFalse('name' in o2);
+      assert.strictEqual(o2.age, o1.age);
+    });
   });
 });

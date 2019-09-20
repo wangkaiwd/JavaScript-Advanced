@@ -12,7 +12,10 @@ const deepClone = <T> (source: T): T => {
   if (isPlainObject(source)) {
     result = {};
     for (const key in source) {
-      if (source.hasOwnProperty(key)) {
+      // hasOwnProperty: 返回一个布尔值，指示对象自身属性中是否具有指定的属性
+      // 这个方法可以用来检测一个对象是否含有特定的自身属性；和in运算符不同，该方法会忽略掉那些从原型链上继承到的属性
+      if (source.hasOwnProperty(key)) { // for ... in 在遍历的时候会遍历对象原型上继承到的属性和方法
+        // for in 遍历的时候会遍历
         result[key] = deepClone(source[key]);
       }
     }
