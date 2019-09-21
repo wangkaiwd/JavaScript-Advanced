@@ -44,4 +44,25 @@ describe('MyPromise', () => {
     });
     promise.then(success);
   });
+  it('2.2.1', () => {
+    const promise = new MyPromise((resolve) => {
+      resolve();
+    });
+    promise.then(false, null);
+    assert.strictEqual(1, 1);
+  });
+  it('2.2.2', (done) => {
+    const success = sinon.fake();
+    const promise = new MyPromise((resolve, reject) => {
+      assert.isFalse(success.called);
+      resolve(233);
+      setTimeout(() => {
+        assert.strictEqual(promise.state, 'fulfilled');
+        assert(success.calledWith(233));
+        assert.isTrue(success.called);
+        done();
+      }, 0);
+    });
+    promise.then(success);
+  });
 });
