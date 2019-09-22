@@ -56,13 +56,66 @@ describe('MyPromise', () => {
     const promise = new MyPromise((resolve, reject) => {
       assert.isFalse(success.called);
       resolve(233);
+      resolve(344);
       setTimeout(() => {
         assert.strictEqual(promise.state, 'fulfilled');
         assert(success.calledWith(233));
-        assert.isTrue(success.called);
+        assert.isTrue(success.calledOnce);
         done();
       }, 0);
     });
     promise.then(success);
   });
+  it('2.2.3', (done) => {
+    const fail = sinon.fake();
+    const promise = new MyPromise((resolve, reject) => {
+      assert.isFalse(fail.called);
+      reject(233);
+      reject(344);
+      setTimeout(() => {
+        assert.strictEqual(promise.state, 'rejected');
+        assert(fail.calledWith(233));
+        assert.isTrue(fail.calledOnce);
+        done();
+      }, 0);
+    });
+    // .then传入的参数不是函数都将被忽略
+    promise.then(null, fail);
+  });
+  it('2.2.4 .then 中的函数会在用户代码执行完之后才执行', (done) => {
+    const succeed = sinon.fake();
+    const promise = new MyPromise((resolve, reject) => {
+      resolve();
+    });
+    promise.then(succeed);
+    assert.isFalse(succeed.called);
+    setTimeout(() => {
+      assert.isTrue(succeed.called);
+      done();
+    }, 0);
+  });
+  it('2.2.5 .then 中的函数在调用时this是undefined', () => {
+    const promise = new MyPromise((resolve, reject) => {
+      resolve();
+    });
+    promise.then(function (this: any) {
+      'use strict';
+      assert.strictEqual(this, undefined);
+    });
+  });
+  it('2.2.6 同一个promise的then方法可以按照顺序调用多次', (done) => {
+    const promise = new MyPromise((resolve, reject) => {
+      resolve();
+    });
+    const callbacks = [sinon.fake(), sinon.fake(), sinon.fake()];
+    callbacks.forEach(callback => promise.then(callback));
+    setTimeout(() => {
+      const [func1, func2, func3] = callbacks;
+      assert.isTrue(func1.called);
+      assert.isTrue(func2.calledAfter(func1));
+      assert.isTrue(func3.calledAfter(func2));
+      done();
+    }, 0);
+  });
 });
+
