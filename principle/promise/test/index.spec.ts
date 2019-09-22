@@ -103,12 +103,26 @@ describe('MyPromise', () => {
       assert.strictEqual(this, undefined);
     });
   });
-  it('2.2.6 同一个promise的then方法可以按照顺序调用多次', (done) => {
+  it('2.2.6.1 同一个promise的then方法中的成功回调可以按照顺序调用多次', (done) => {
     const promise = new MyPromise((resolve, reject) => {
       resolve();
     });
     const callbacks = [sinon.fake(), sinon.fake(), sinon.fake()];
     callbacks.forEach(callback => promise.then(callback));
+    setTimeout(() => {
+      const [func1, func2, func3] = callbacks;
+      assert.isTrue(func1.called);
+      assert.isTrue(func2.calledAfter(func1));
+      assert.isTrue(func3.calledAfter(func2));
+      done();
+    }, 0);
+  });
+  it('2.2.6.2 同一个promise的then方法中的失败回调可以按照顺序调用多次', (done) => {
+    const promise = new MyPromise((resolve, reject) => {
+      reject();
+    });
+    const callbacks = [sinon.fake(), sinon.fake(), sinon.fake()];
+    callbacks.forEach(callback => promise.then(null, callback));
     setTimeout(() => {
       const [func1, func2, func3] = callbacks;
       assert.isTrue(func1.called);
