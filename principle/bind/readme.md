@@ -239,7 +239,7 @@ const _bind = function (this: AnyFunction) {
 ### 通过测试用例
 为了保证代码的准确性，要通过一些测试用例来测试代码。
 
-测试测试环境配置教程点击这里： [传送门]()
+测试测试环境配置教程点击这里： [传送门](https://github.com/wangkaiwd/JavaScript-Advanced/blob/master/testconfig.md)
 
 测试代码如下：  
 ```typescript
@@ -340,4 +340,6 @@ yarn test -g "myBind"
 
 这里为止，我们基本上已经完成了一个功能完善的`bind`函数。
 
-源码地址在这里： [传送门]()
+源码地址在这里： [传送门](https://github.com/wangkaiwd/JavaScript-Advanced/blob/master/principle/bind/src/index.ts)
+
+如果文章对你有用的话，希望能`star`给予鼓励，让社区中乐于分享的开发者创造出更好的作品。
