@@ -235,3 +235,8 @@ const _bind = function (this: AnyFunction) {
 这里我们实现一个兼容性较好的版本。
 
 在`mdn`里也有对于`bind`的实现代码，可以用来参考： [传送门](https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Global_Objects/Function/bind#Compatibility)
+
+### 通过测试用例
+为了保证代码的准确性，要通过一些测试用例来测试代码。
+
+测试测试环境配置教程点击这里： [传送门]()
