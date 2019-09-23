@@ -111,6 +111,7 @@ const person = new (Person('wk', 12) as any);
 ```
 
 `new`关键字会进行如下操作：  
+
 1. 创建一个空的简单`JavaScript`对象(即`{}`)
 2. 将这个空对象的原型指向构造函数的`prototype`属性
 3. 将步骤1新创建的对象作为`this`的上下文
@@ -204,7 +205,8 @@ const myBind = function (this: AnyFunction, context?: any, ...args1: any[]) {
 ### 兼容旧语法
 上边版本的`bind`方法用到了很多新语法，而在有些浏览器并不能很好的兼容这些语法。
 
-为了提高代码的兼容性，我们使用`es5`的相关`api`来实现`bind`，修改内容如下：  
+为了提高代码的兼容性，我们使用`es5`的相关`api`来实现`bind`，修改内容如下：
+  
 * `const => var`
 * 用`arguments`来代替剩余参数`...args`
 * 用`concat`来拼接数组
