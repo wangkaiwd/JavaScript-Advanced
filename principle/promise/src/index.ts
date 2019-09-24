@@ -33,8 +33,8 @@ class MyPromise {
   }
 
   then (success: any, fail?: any) {
-    (typeof success === 'function') && (this.successes.push(success));
-    (typeof fail === 'function') && (this.fails.push(fail));
+    typeof success === 'function' && this.successes.push(success);
+    typeof fail === 'function' && this.fails.push(fail);
   }
 }
 
