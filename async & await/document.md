@@ -55,3 +55,4 @@ const getHello3 = async (): Promise<string> => {
 };
 ```
 
+### `await`关键字
