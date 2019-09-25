@@ -21,3 +21,6 @@ Promise.resolve(Promise.reject(123))
 
 #### `Promise.race`
 等待第一个状态改变
+
+#### 面试题
+串行，用点餐问题解决面试题
