@@ -35,7 +35,7 @@ Promise.all([promise1, promise2, promise3]).then(
 2. `return Promise.resolve(value)`,返回一个`fulfilled`状态的`Promise`,将`resolve(value)`中的参数作为成功状态回调的参数
 3. `then`中的回调函数抛出一个错误(`throw new Error`)，那么`then`返回的`Promise`将会成为拒绝状态，并且将抛出的错误作为拒绝状态的回调函数的参数值
 4. `return Promise.reject(error)`,返回一个已经是拒绝状态的`Promise`, 那么`then`返回的`Promise`也会成为拒绝状态，并且将`reject`中的参数`error`作为该被返回`Promise`的拒绝状态的回调函数的参数值作为该被返回的`Promise`的拒绝状态回调函数的参数值
-5. 返回一个未定状态的`Promise`
+5. 返回一个未定状态的`Promise`,`.then`执行的状态由之前返回的`Promise`的状态决定
 
 总结：**只要没有报错或者手动指定`Promise.reject()`,那么都会执行`.then`中的成功回调，参数为前一个`Promise`的返回值或`resolve`调用时的参数。如果前一个`Promise`报错或者执行`Promise.reject()`，那么会执行`.then`中的失败回调，参数为前一个`Promise`中的报错信息或者`reject`调用时的参数**
 
