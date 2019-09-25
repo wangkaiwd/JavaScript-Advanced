@@ -56,3 +56,29 @@ const getHello3 = async (): Promise<string> => {
 ```
 
 ### `await`关键字
+正常情况下，`await`命令后面是一个`Promise`对象，返回该对象的结果。如果不是`Promise`对象(不要这样写)，就直接返回对应的值。
+```typescript
+async function f () {
+  // return await 123;
+  // 等同于
+  return 123;
+}
+
+f().then(r => console.log(r)); // 123
+```
+
+模拟`sleep`函数：  
+```typescript
+const sleep = () => new Promise((resolve, reject) => {
+  const startDate = Date.now();
+  setTimeout(() => resolve(Date.now() - startDate), 4000);
+});
+
+(async () => {
+  // 只会阻塞函数内部代码的执行，并不会阻塞外部代码的执行
+  const duration = await sleep();
+  console.log('duration', duration);
+})();
+```
+
+`await`命令后面的`Promise`对象如果变为`reject`状态，则`reject`的参数会被`catch`方法的回调函数函数接收到，并且整个`async`函数都会中断执行。
