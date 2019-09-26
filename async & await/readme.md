@@ -24,3 +24,17 @@ Promise.resolve(Promise.reject(123))
 
 #### 面试题
 串行，用点餐问题解决面试题
+
+### `async & await`基础用法
+优点：完全没有缩进，就像是在写同步代码。
+
+错误处理
+
+`await & async`和`Promise`有异步传染性，回调没有传染性。
+
+天生串行
+
+在循环里是并行的：  
+```typescript
+
+```
