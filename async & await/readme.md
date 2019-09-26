@@ -76,7 +76,9 @@ fn3();
 
 天生串行
 
-在循环里是并行的：  
+在循环的时候会出现问题,`js`又出了一个新的语法来填坑(`for await`) 
 ```typescript
 
 ```
+
+并行： `await Promise.all([promise1,promise2,promise3])`
