@@ -8,4 +8,6 @@
 * [手写`eventHub`](https://github.com/wangkaiwd/JavaScript-Advanced/blob/master/principle/eventHub/readme.md)
 * [手写深拷贝]()
 * [手写`bind`](https://github.com/wangkaiwd/JavaScript-Advanced/blob/master/principle/bind/readme.md)
-
+* 手写`Promise`
+* 深入`async & await`
+### `NodeJs`后端入门
