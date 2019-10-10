@@ -1,5 +1,5 @@
 ## `Nodejs`基础架构
-
+![](https://raw.githubusercontent.com/wangkaiwd/drawing-bed/master/node-technology-architecture.png)
 ### `js`与`c++`进行通信
 `Node.js bindings`
 
@@ -20,3 +20,19 @@
 `V8`执行`JS`是单线程
 
 ### `EventLoop`
+`EventLoop`就是对事件处理优先级顺序的管理：  
+```javascript
+// 定时器
+setTimeout(f1,100)
+// 文件读取成功
+fs.readFile('/1.txt',f2)
+// socket关闭
+server.on('close',f3)
+```
+当定时器和事件都是`100ms`后执行时，执行时的优先级顺序应该是怎么样的？
+
+### 学习`api`
+很好的学习`Node api`的网站： [DevDocs API Document](https://devdocs.io/)
+
+常用`api`:
+
