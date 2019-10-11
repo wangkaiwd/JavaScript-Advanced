@@ -1,9 +1,9 @@
 ## `Nodejs`基础架构
 ![](https://raw.githubusercontent.com/wangkaiwd/drawing-bed/master/node-technology-architecture.png)
 ### `js`与`c++`进行通信
-`Node.js bindings`
+`Node.js bindings`: 让`js`和`C/C++`通信
 
-自定义其它能力
+自定义其它能力：`C/C++`插件
 
 ### `libuv`
 跨平台的异步`I/O`库
