@@ -29,10 +29,23 @@ fs.readFile('/1.txt',f2)
 // socket关闭
 server.on('close',f3)
 ```
-当定时器和事件都是`100ms`后执行时，执行时的优先级顺序应该是怎么样的？
+当定时器和事件都是`100ms`后执行时，执行时的优先级顺序就是`EventLoop`来进行处理的。
 
 ### 学习`api`
 很好的学习`Node api`的网站： [DevDocs API Document](https://devdocs.io/)
 
 常用`api`:
-
+* Buffer
+* Child Processes：子进程
+* Cluster: 集群
+* Debugger
+* Events
+* File System
+* Globals
+* HTTP
+* Path
+* Process: 进程
+* Query Strings
+* Stream: 流
+* Timers
+* URL
