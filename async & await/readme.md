@@ -1,15 +1,39 @@
 ## `async & await`
+只要使用了`async`关键字，函数就会返回一个`Promise`，并且`await`后通常会接一个`Promise`来使用(否则没有意义)。
 
+所以在理解`async & await`之前我们要先学习`Promise`
 ### `Promise`
-
+首先看一个`Promise`基础的例子：  
+```typescript
+const randomNumber = () => {
+  return new Promise((resolve, reject) => {
+    setTimeout(() => {
+      resolve(Math.floor(Math.random() * 6 + 1));
+    }, 3000);
+  });
+};
+```
+使用上边例子中的函数：  
+```typescript
+randomNumber().then((n) => console.log(n)) // 随机1到6数字
+```
 #### `Promise.resolve(result)`
-制造一个成功或(失败)
+首先看一下`mdn`对于`Promise.resolve()`方法的定义：
+> `Promise.resolve(value)`方法返回一个以给定值解析后的`Promise`对象。如果该值为`promise`,返回这个`Promise`
 
+`Promise.resolve()`会返回一个成功的`Promise`
+```typescript
+Promise.resolve(4).then(res => console.log(res)); //4
+```
+
+值得注意的是，如果我们`resolve`一个失败状态的`Promise`，会返回一个失败的`Promise`
 ```typescript
 // 最终的状态是由resolve中传入的Promise决定的
 Promise.resolve(Promise.reject(123))
   .then(res => console.log('res', res), err => console.log('err', err)); //err 123
 ```
+
+总结： 通常情况下`Promise.resolve`会返回一个成功状态的`Promise`，但是如果我们为`Promise.resolve`传入一个失败状态的`Promise`时会返回一个失败状态的`Promise`。
 
 #### `Promise.reject(reason)`
 制造一个失败
