@@ -57,6 +57,44 @@ Promise.reject('failed').then(null, (reason) => {
 
 简单来说，所有传入的`promise`成功才会返回成功状态的`promise`，如果有一个`promise`失败的话就会返回失败状态的`promise`。
 
+下面是一个Promise.all`成功的例子：
+```typescript
+const promise1 = Promise.resolve(3);
+const promise2 = 42;
+const promise3 = new Promise((resolve, reject) => {
+  console.time('promiseTime');
+  // @see: https://developer.mozilla.org/zh-CN/docs/Web/API/Window/setTimeout#%E5%8F%82%E6%95%B0
+  setTimeout(resolve, 1000, 'foo');
+});
+
+Promise.all([promise1, promise2, promise3]).then(
+  (values) => {
+    console.timeEnd('promiseTime'); // promiseTime: 1004.001ms
+    console.log('values', values); // [ 3 , 42, 'foo' ]
+  }
+);
+```
+
+我们再看一个`Promise.all`失败的例子：  
+```typescript
+// node的typescript类型声明文件没有定义这个借口
+interface Console {
+  timeLog: (label?: string) => void
+}
+
+const promise4 = Promise.reject('reject');
+const promise3 = new Promise((resolve, reject) => {
+  console.time('promiseTime');
+  // @see: https://developer.mozilla.org/zh-CN/docs/Web/API/Window/setTimeout#%E5%8F%82%E6%95%B0
+  setTimeout(resolve, 1000, 'foo');
+});
+const promise1 = Promise.resolve(3);
+
+Promise.all([promise1, promise3, promise4]).then(null, (reason) => {
+  console.timeLog('promiseTime'); // promiseTime: 0.709ms
+  console.log('reason', reason); // reason reject
+});
+```
 
 它是有问题的，我们想要的是`Promise.allSettled`
 
