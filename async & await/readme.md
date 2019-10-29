@@ -47,6 +47,17 @@ Promise.reject('failed').then(null, (reason) => {
 ```
 
 #### `Promise.all`
+`mdn`对于这个方法的描述如下：  
+> `Promise.all(iterable)`方法返回一个`Promise`实例，此实例在`iterable`参数内所有的`Promise`都完成(`resolved`)或参数中不包含`promise`时回调完成(`resolve`);如果参数中`promise`有一个失败(`rejected`)，此实例回调失败(`reject`),失败原因是第一失败`promise`的结果。
+
+将官方文档的内容整理一下，大概是这样一个意思： 
+* `Promise.all`返回值是一个`Promise`实例
+* 当传入的参数中的`promise`都处于`resolved`状态或者不包含`promise`时，该方法会返回一个成功状态的`promise`实例
+* 如果传入参数中有一个`promise`变成失败(`rejected`)状态，那么该方法返回一个失败状态的`promise`实例，并且参数是第一个失败`promise`的失败原因
+
+简单来说，所有传入的`promise`成功才会返回成功状态的`promise`，如果有一个`promise`失败的话就会返回失败状态的`promise`。
+
+
 它是有问题的，我们想要的是`Promise.allSettled`
 
 由于`Promise.allSettled`的兼容性并不好，我们可以简单实现下。
