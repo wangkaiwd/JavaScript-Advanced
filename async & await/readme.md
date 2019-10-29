@@ -113,8 +113,36 @@ Promise.allSettled([promise1, promise3, promise4]).then((results) => {
 ```
 但是这个方法的兼容性并不好，我们可以使用现有的`api`进行实现：  
 ```typescript
+const promise1 = Promise.resolve(3);
+const promise3 = new Promise((resolve, reject) => {
+  console.time('promiseTime');
+  // @see: https://developer.mozilla.org/zh-CN/docs/Web/API/Window/setTimeout#%E5%8F%82%E6%95%B0
+  setTimeout(resolve, 1000, 'foo');
+});
 
+const generalSuccessPromises = (promises: Promise<any>[]) => {
+  return promises.map(promise => {
+    return promise.then(
+      (result) => ({ status: 'fulfilled', value: result }),
+      (error) => ({ status: 'rejected', reason: error })
+    );
+  });
+};
+
+const promise4 = Promise.reject('reject');
+const promises = generalSuccessPromises([promise1, promise3, promise4]);
+Promise.all(promises).then((results) => {
+  console.timeEnd('promiseTime');
+  console.log('results', results);
+  // promiseTime: 1006.648ms
+  // results [
+  //   { status: 'fulfilled', value: 3 },
+  //   { status: 'fulfilled', value: 'foo' },
+  //   { status: 'rejected', reason: 'reject' }
+  // ]
+});
 ```
+这样我们就可以简单实现类似`Promise.allSettled`的功能，成功拿到每个`promise`的状态和对应的参数
 
 #### `Promise.race`
 等待第一个状态改变

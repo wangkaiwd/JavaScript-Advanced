@@ -24,19 +24,28 @@ const promise3 = new Promise((resolve, reject) => {
   setTimeout(resolve, 1000, 'foo');
 });
 
+const generalSuccessPromises = (promises: Promise<any>[]) => {
+  return promises.map(promise => {
+    return promise.then(
+      (result) => ({ status: 'fulfilled', value: result }),
+      (error) => ({ status: 'rejected', reason: error })
+    );
+  });
+};
+
+const promise4 = Promise.reject('reject');
+const promises = generalSuccessPromises([promise1, promise3, promise4]);
+Promise.all(promises).then((results) => {
+  console.timeEnd('promiseTime');
+  console.log('results', results);
+});
+
 // Promise.all([promise1, promise2, promise3]).then(
 //   (values) => {
 //     console.timeEnd('promiseTime'); // promiseTime: 1004.001ms
 //     console.log('values', values); // [ 3 , 42, 'foo' ]
 //   }
 // );
-const promise4 = Promise.reject('reject');
-
-// Promise.all([promise1, promise3, promise4]).then(null, (reason) => {
-//   console.timeLog('promiseTime'); // promiseTime: 0.709ms
-//   console.log('reason', reason); // reason reject
-// });
-// @ts-ignore
 
 // Promise.reject('failed').then(null, (reason) => {
 //   console.log('reason', reason); // 'reason failed'
