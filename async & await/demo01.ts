@@ -24,3 +24,7 @@ Promise.all([promise1, promise2, promise3]).then(
     console.log('values', values); // [ 3 , 42, 'foo' ]
   }
 );
+
+Promise.reject('failed').then(null, (reason) => {
+  console.log('reason', reason); // 'reason failed'
+});

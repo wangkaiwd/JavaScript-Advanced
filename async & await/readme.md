@@ -36,7 +36,15 @@ Promise.resolve(Promise.reject(123))
 总结： 通常情况下`Promise.resolve`会返回一个成功状态的`Promise`，但是如果我们为`Promise.resolve`传入一个失败状态的`Promise`时会返回一个失败状态的`Promise`。
 
 #### `Promise.reject(reason)`
-制造一个失败
+`mdn`的描述如下：  
+> `Promise.reject(reason)`方法返回一个带有拒绝原因`reason`参数的`Promise`对象
+
+用法如下：  
+```typescript
+Promise.reject('failed').then(null, (reason) => {
+  console.log('reason', reason); // 'reason failed'
+});
+```
 
 #### `Promise.all`
 它是有问题的，我们想要的是`Promise.allSettled`
