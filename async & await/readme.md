@@ -82,23 +82,39 @@ interface Console {
   timeLog: (label?: string) => void
 }
 
-const promise4 = Promise.reject('reject');
+const promise1 = Promise.resolve(3);
 const promise3 = new Promise((resolve, reject) => {
   console.time('promiseTime');
   // @see: https://developer.mozilla.org/zh-CN/docs/Web/API/Window/setTimeout#%E5%8F%82%E6%95%B0
   setTimeout(resolve, 1000, 'foo');
 });
-const promise1 = Promise.resolve(3);
-
+const promise4 = Promise.reject('reject');
 Promise.all([promise1, promise3, promise4]).then(null, (reason) => {
   console.timeLog('promiseTime'); // promiseTime: 0.709ms
   console.log('reason', reason); // reason reject
 });
 ```
 
-它是有问题的，我们想要的是`Promise.allSettled`
+根据`log`的时间可以判断，在`promise4`处于`rejected`状态时`Promise.all`的失败状态触发。
 
-由于`Promise.allSettled`的兼容性并不好，我们可以简单实现下。
+但我们可能想要知道哪些请求成功，哪些请求失败，并对请求成功和失败的结果分别进行处理。
+
+`Promise`针对这个问题，提供了`Promise.allSettled`方法。还是上边的代码，我们用这个`api`重新执行：  
+```js
+Promise.allSettled([promise1, promise3, promise4]).then((results) => {
+  console.timeLog('promiseTime'); // 1000.69384765625ms
+  console.log('results', results);
+  // [
+  //    {status:"fulfilled",value:3},
+  //    {status:"fulfilled",value: "foo"},
+  //    {status:"rejected",reason: "reject"}
+  // ]
+});
+```
+但是这个方法的兼容性并不好，我们可以使用现有的`api`进行实现：  
+```typescript
+
+```
 
 #### `Promise.race`
 等待第一个状态改变

@@ -32,10 +32,11 @@ const promise3 = new Promise((resolve, reject) => {
 // );
 const promise4 = Promise.reject('reject');
 
-Promise.all([promise1, promise3, promise4]).then(null, (reason) => {
-  console.timeLog('promiseTime'); // promiseTime: 0.709ms
-  console.log('reason', reason); // reason reject
-});
+// Promise.all([promise1, promise3, promise4]).then(null, (reason) => {
+//   console.timeLog('promiseTime'); // promiseTime: 0.709ms
+//   console.log('reason', reason); // reason reject
+// });
+// @ts-ignore
 
 // Promise.reject('failed').then(null, (reason) => {
 //   console.log('reason', reason); // 'reason failed'
