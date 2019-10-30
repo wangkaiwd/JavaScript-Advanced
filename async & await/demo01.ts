@@ -24,7 +24,7 @@ const promise3 = new Promise((resolve, reject) => {
   setTimeout(resolve, 1000, 'foo');
 });
 
-const generalSuccessPromises = (promises: Promise<any>[]) => {
+const generateSuccessPromises = (promises: Promise<any>[]) => {
   return promises.map(promise => {
     return promise.then(
       (result) => ({ status: 'fulfilled', value: result }),
@@ -34,7 +34,7 @@ const generalSuccessPromises = (promises: Promise<any>[]) => {
 };
 
 const promise4 = Promise.reject('reject');
-const promises = generalSuccessPromises([promise1, promise3, promise4]);
+const promises = generateSuccessPromises([promise1, promise3, promise4]);
 Promise.all(promises).then((results) => {
   console.timeEnd('promiseTime');
   console.log('results', results);
