@@ -2,6 +2,7 @@
 interface Console {
   timeLog: (label?: string) => void
 }
+
 // const randomNumber = () => {
 //   return new Promise((resolve, reject) => {
 //     setTimeout(() => {
@@ -35,6 +36,7 @@ const generateSuccessPromises = (promises: Promise<any>[]) => {
 
 const promise4 = Promise.reject('reject');
 const promises = generateSuccessPromises([promise1, promise3, promise4]);
+
 Promise.all(promises).then((results) => {
   console.timeEnd('promiseTime');
   console.log('results', results);

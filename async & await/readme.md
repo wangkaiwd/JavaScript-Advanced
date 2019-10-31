@@ -142,7 +142,7 @@ Promise.all(promises).then((results) => {
 `mdn`的介绍如下：  
 > `Promise.race(iterable)`方法返回一个`promise`,一旦迭代器中的某个`promise`解决或拒绝，返回的`promise`就会解决或拒绝 
 
-换句话说只要有一个`promise`完成，该方法就会返回对应状态的`promise`。该方法的使用场景比较少，下面是一个例子：  
+换句话说只要有一个`promise`完成，该方法就会返回对应状态的`promise`。下面是一个例子：  
 ```typescript
 const promise1 = Promise.resolve(3);
 const promise2 = 42;
@@ -166,6 +166,7 @@ Promise.race([promise1, promise2, promise3]).then(
 
 #### 面试题
 串行，用点餐问题解决面试题
+
 
 
 
