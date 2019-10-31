@@ -57,7 +57,7 @@ Promise.reject('failed').then(null, (reason) => {
 
 简单来说，所有传入的`promise`成功才会返回成功状态的`promise`，如果有一个`promise`失败的话就会返回失败状态的`promise`。
 
-下面是一个Promise.all`成功的例子：
+下面是一个`Promise.all`成功的例子：
 ```typescript
 const promise1 = Promise.resolve(3);
 const promise2 = 42;
@@ -139,7 +139,30 @@ Promise.all(promises).then((results) => {
 这样我们就可以简单实现类似`Promise.allSettled`的功能，成功拿到每个`promise`的状态和对应的参数
 
 #### `Promise.race`
-等待第一个状态改变
+`mdn`的介绍如下：  
+> `Promise.race(iterable)`方法返回一个`promise`,一旦迭代器中的某个`promise`解决或拒绝，返回的`promise`就会解决或拒绝 
+
+换句话说只要有一个`promise`完成，该方法就会返回对应状态的`promise`。该方法的使用场景比较少，下面是一个例子：  
+```typescript
+const promise1 = Promise.resolve(3);
+const promise2 = 42;
+const promise3 = new Promise((resolve, reject) => {
+  console.time('promiseTime');
+  // @see: https://developer.mozilla.org/zh-CN/docs/Web/API/Window/setTimeout#%E5%8F%82%E6%95%B0
+  setTimeout(resolve, 1000, 'foo');
+});
+
+const promise4 = Promise.reject('reject');
+
+Promise.race([promise1, promise2, promise3]).then(
+  (response) => {
+    console.log('response', response); // response 3
+  },
+  (error) => {
+    console.log('error', error);
+  }
+);
+```
 
 #### 面试题
 串行，用点餐问题解决面试题
