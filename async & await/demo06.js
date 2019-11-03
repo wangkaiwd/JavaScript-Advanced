@@ -20,30 +20,19 @@ const $buttonB = $('#buttonB');
 const $input = $('#input');
 
 // const queue = [{ key: 'A', value: '操作A' }, { key: 'B', value: '操作B' }];
-let queue = [];
+const array1 = [];
+const array2 = [];
 
 const answer = (key, value) => {
-  const index = queue.findIndex(item => item.key === key);
-  console.log('index', index, queue);
-  if (queue[0].value) {
-    $input.value = value;
-  } else {
-    if (index === 0) {
-      $input.value = value;
-    }
-  }
-  queue[index].value = value;
 };
 $buttonA.addEventListener('click', () => {
   queue.push({ key: 'A' });
   promiseA().then(string => {
-    answer('A', string);
   });
 });
 
 $buttonB.addEventListener('click', () => {
   queue.push({ key: 'B' });
   promiseB().then(string => {
-    answer('B', string);
   });
 });
