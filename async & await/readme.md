@@ -167,7 +167,19 @@ Promise.race([promise1, promise2, promise3]).then(
 #### 面试题
 串行，用点餐问题解决面试题
 
+#### `Promise`错误处理
 
+我们可以通过`.then`方法的第二参数来对`Promise`进行错误处理：  
+```typescript
+Promise.reject('error').then(null, (error) => {
+  console.log(error); // error
+});
+
+Promise.reject('error').catch((error) => {
+  console.log(error); // error
+});
+```
+`.catch`方法与`.then(null, onRejected)`是相同的，只不过是`Promise`为错误处理单独提供的一个语法而已。
 
 
 ### `async & await`基础用法

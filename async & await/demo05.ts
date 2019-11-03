@@ -16,4 +16,13 @@ Promise.race([promise1, promise2, promise3]).then(
     console.log('error', error);
   }
 );
+
+Promise.reject('error').then(null, (error) => {
+  console.log(error); // error
+});
+
+Promise.reject('error').catch((error) => {
+  console.log(error); // error
+});
+
 export {};
