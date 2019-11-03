@@ -59,4 +59,4 @@ const fn3 = async () => {
 
   console.log('fn3 end');
 };
-fn3();
+fn3().then();
