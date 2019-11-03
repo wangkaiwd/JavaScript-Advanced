@@ -181,6 +181,36 @@ Promise.reject('error').catch((error) => {
 ```
 `.catch`方法与`.then(null, onRejected)`是相同的，只不过是`Promise`为错误处理单独提供的一个语法而已。
 
+这里需要注意的是：**如果函数抛出错误或返回一个拒绝的`Promise`,`then`才会返回一个拒绝的`Promise`**
+```typescript
+Promise.reject('error')
+  .catch((error) => {
+    // 会返回一个成功状态的Promise
+    return error;
+  })
+  .then((result) => {
+    // result1 error
+    console.log('result1', result);
+  }, (error) => {
+    // 不会执行
+    console.log('error1', error);
+  });
+
+Promise.reject('error')
+  .catch((error) => {
+    // 会返回一个失败状态的Promise
+    // Promise.reject(error)
+    throw new Error(error);
+  })
+  .then((result) => {
+    // 不会执行
+    console.log('result2', result);
+  }, (error) => {
+    // error2 Error: error
+    console.log('error2', error);
+  });
+```
+
 
 ### `async & await`基础用法
 优点：完全没有缩进，就像是在写同步代码。
