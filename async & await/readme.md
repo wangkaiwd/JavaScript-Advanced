@@ -213,7 +213,29 @@ Promise.reject('error')
 
 
 ### `async & await`基础用法
-优点：完全没有缩进，就像是在写同步代码。
+首先看一个最常见的例子：  
+```typescript
+const makePromise = () => {
+  return new Promise<number>((resolve) => {
+    setTimeout(() => {
+      resolve(100);
+    }, 1000);
+  });
+};
+const fn = async () => {
+  const result = await makePromise();
+  console.log('result', result); // result 100
+  return result + 1;
+};
+
+fn().then();
+```
+通常情况下，我们会在`await`后面接一个`Promise`，之后的代码都会在`Promise`完成后再执行
+
+这样写的好处是代码没有缩进，看起来比较简洁，就像写同步代码一样。我们再封装一个获取随机数的函数来进一步体验一下
+```typescript
+
+```
 
 错误处理:
 ```typescript
