@@ -223,15 +223,40 @@ Promise.resolve(1).then(false)
 Promise.resolve(1).then(123)
 ```
 ![](https://raw.githubusercontent.com/wangkaiwd/drawing-bed/master/ts-promise-then-arguments-type.png)
-在`TypeScript`中也有`then`参数的类型，分别支持函数、`null`、`undefined`。本文中的`then(null)`只是习惯性写法
+在`TypeScript`中也有`then`参数的类型，分别支持函数、`null`、`undefined`。本文中的`then(null)`只是笔者习惯性写法
 
 在`mdn`中还有如下介绍： 
 ![](https://raw.githubusercontent.com/wangkaiwd/drawing-bed/master/promise-then-no-handle.png)
 
 文档中的内容换句话说就是：**`then`中如果没有`Promise`对应状态的回调函数，那么`then`相当于无效，可以直接忽略**
 ```typescript
+Promise.reject('error')
+  .then()
+  .then(null)
+  .then(null, undefined)
+  .then(null, (error) => {
+    console.log('error', error);
+  });
 
+// 相当于
+Promise.reject('error').then(null, (error) => {
+  console.log('error', error);
+});
+
+Promise.resolve('success')
+  .then()
+  .then(null)
+  .then(null, undefined)
+  .then((result) => {
+    console.log('result', result);
+  });
+
+// 相当于
+Promise.resolve('success').then((result) => {
+  console.log('result', result);
+});
 ```
+可以看到，中间没有对应状态的函数时，`Promise`就会当做什么都没发生一样继续执行后边的`.then`函数
 
 ### `async & await`基础用法
 首先看一个最常见的例子：  
