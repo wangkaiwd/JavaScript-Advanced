@@ -12,8 +12,12 @@ const getRandomNumber = () => {
 };
 
 const fn = async () => {
-  const n = await getRandomNumber();
-  console.log(n);
+  try {
+    const n = await getRandomNumber();
+    console.log(n);
+  } catch (e) {
+    console.log('error', e);
+  }
 };
 fn().then();
 export {};
