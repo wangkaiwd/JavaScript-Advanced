@@ -210,7 +210,28 @@ Promise.reject('error')
     console.log('error2', error);
   });
 ```
+#### 细节知识
+> 这里对于一些不太常规的用法进行一下补充
 
+在`Promise/A+`规范中有这样一句话：
+![](https://raw.githubusercontent.com/wangkaiwd/drawing-bed/master/promise-then-argument-not-function.png)
+这句话告诉我们，如果`then`方法中接收的参数不是函数，则必须必忽略。所以下面的参数都将无效：
+```typescript
+Promise.resolve(1).then(null)
+Promise.resolve(1).then(undefined)
+Promise.resolve(1).then(false)
+Promise.resolve(1).then(123)
+```
+![](https://raw.githubusercontent.com/wangkaiwd/drawing-bed/master/ts-promise-then-arguments-type.png)
+在`TypeScript`中也有`then`参数的类型，分别支持函数、`null`、`undefined`。本文中的`then(null)`只是习惯性写法
+
+在`mdn`中还有如下介绍： 
+![](https://raw.githubusercontent.com/wangkaiwd/drawing-bed/master/promise-then-no-handle.png)
+
+文档中的内容换句话说就是：**`then`中如果没有`Promise`对应状态的回调函数，那么`then`相当于无效，可以直接忽略**
+```typescript
+
+```
 
 ### `async & await`基础用法
 首先看一个最常见的例子：  
@@ -283,6 +304,20 @@ const getUser = async () => {
     console.log('error', e);
   }
   console.log(user);
+};
+getUser().then();
+```
+
+更好的错误处理方式是通过`await`和`then`结合来实现：  
+```typescript
+const errorHandle = (e: Error) => {
+  // 这里直接将错误抛出，否则就会返回一个新的promise被user接收到
+  throw e;
+};
+// await 和 then结合
+const getUser = async () => {
+  const user = await fetchUser().then(null, errorHandle);
+  console.log('user', user);
 };
 getUser().then();
 ```
