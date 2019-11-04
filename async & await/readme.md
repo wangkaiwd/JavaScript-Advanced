@@ -347,17 +347,6 @@ const getUser = async () => {
 getUser().then();
 ```
 
-`await & async`和`Promise`有异步传染性，回调没有传染性。
-
-天生串行
-
-在循环的时候会出现问题,`js`又出了一个新的语法来填坑(`for await`) 
-```typescript
-
-```
-
-并行： `await Promise.all([promise1,promise2,promise3])`
-
 ### 代码题
 页面有两个按钮A和B，以及一个输入框，A按钮点击后发送一个请求，返回一个字符串A，B也发送请求，但返回字符串B，返回后会把字符串赋值给输入框，但是A、B发送的俩个请求返回的时间不同，点击两个按钮的顺序也不一定，而最终效果要求是要输入框按照点击顺序进行展示按钮文字。
 
