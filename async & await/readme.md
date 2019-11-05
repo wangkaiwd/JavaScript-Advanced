@@ -333,6 +333,22 @@ const getUser = async () => {
 getUser().then();
 ```
 
+如果有多个`await`命令，可以统一放到`try...catch`中：  
+```typescript
+const main = async () => {
+  try {
+    const first = await fetchUser('first');
+    const second = await fetchUser('second');
+    const third = await fetchUser('third');
+    console.log('final', third);
+  } catch (e) {
+    console.log('error', e);
+  }
+};
+
+main().then();
+```
+
 更好的错误处理方式是通过`await`和`then`结合来实现：  
 ```typescript
 const errorHandle = (e: Error) => {
@@ -348,11 +364,10 @@ getUser().then();
 ```
 
 ### `await`的传染性
-代码：  
+
+`await`会导致它左边和下边的代码都变成异步：    
 ```typescript
-console.log(1);
-await console.log(2);
-console.log(3);
+
 ```
 
 * `console.log(3)`变成异步任务了
@@ -361,17 +376,19 @@ console.log(3);
 
 如果想让`console.log(3)`同步执行，移到`await`上面就好了
 ```typescript
-console.log(1);
-console.log(3);
-await console.log(2);
+
 ```
 
 ### `await`的应用场景
-`await`天生串行
+`await`天生串行，多个`await`后面的异步操作，会按照同步顺序执行：
+```typescript
+const foo = await getFoo();
+const bar = await getBar();
+```
+当`getFoo()`和`getBar()`是俩个独立的操作时，这样写就会比较费时。因为只有在`getFoo`执行完成后才会执行`getBar`，我们完全可以让它们同时触发。
+```typescript
+// 写法一(这里其实将Promise.all替换为Promise.allSettled更好）
+const [foo,bar] = await Promise.all([getFoo(),getBar()])
+```
 
 如何在`for`循环中使用`await`: `for await...of`
-
-### 代码题
-页面有两个按钮A和B，以及一个输入框，A按钮点击后发送一个请求，返回一个字符串A，B也发送请求，但返回字符串B，返回后会把字符串赋值给输入框，但是A、B发送的俩个请求返回的时间不同，点击两个按钮的顺序也不一定，而最终效果要求是要输入框按照点击顺序进行展示按钮文字。
-
-常见的需求场景：快速搜索俩个内容，要求不管请求完成的顺序如何，但是最终的展示的搜索内容为当时搜索的顺序。
