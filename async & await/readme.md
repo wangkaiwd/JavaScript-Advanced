@@ -389,6 +389,11 @@ const bar = await getBar();
 ```typescript
 // 写法一(这里其实将Promise.all替换为Promise.allSettled更好）
 const [foo,bar] = await Promise.all([getFoo(),getBar()])
+
+// 写法二(经过测试这样写确实可以，但是不明白为什么)
+const fooPromise = getFoo();
+const barPromise = getBar();
+const foo = await fooPromise;
+const bar = await barPromise;
 ```
 
-如何在`for`循环中使用`await`: `for await...of`
