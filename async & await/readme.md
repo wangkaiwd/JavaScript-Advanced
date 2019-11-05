@@ -367,16 +367,37 @@ getUser().then();
 
 `await`会导致它左边和下边的代码都变成异步：    
 ```typescript
-
+const fn = async () => {
+  console.log(1);
+  await console.log(2);
+  console.log(3);
+};
+fn().then();
+console.log(4);
+// 1
+// 2
+// 4
+// 3
 ```
 
-* `console.log(3)`变成异步任务了
-* `Promise`同样也具有传染性(同步变异步)
-* 谁没有传染性：回调
-
-如果想让`console.log(3)`同步执行，移到`await`上面就好了
+根据输出结果可以看到，`console.log(3)`变成异步任务了。同样的情况也会在`Promise`中出现,`then`中的内容都会变成异步：  
 ```typescript
-
+const fn2 = () => {
+  return new Promise((resolve, reject) => {
+    console.log(1);
+    resolve();
+  });
+};
+fn2().then(() => {
+  console.log(2);
+}).then(() => {
+  console.log(3);
+});
+console.log(4);
+// 1 
+// 4 
+// 2 
+// 3
 ```
 
 ### `await`的应用场景
