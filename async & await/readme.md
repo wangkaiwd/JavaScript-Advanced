@@ -456,5 +456,34 @@ setTimeout(() => {
 ```
 这里能否获取到`sum`的值完全取决于代码的执行时间，我们可以将对应的`Promise`暴露出来，在`.then`函数中读取导入参数
 ```typescript
+// demo13.ts
+let sum: number;
+const getSum = async () => {
+  const { add } = await import('./demo12');
+  sum = add(1, 2);
+};
+// 导出promise
+export default getSum();
+export { sum };
 
+// demo14.ts
+import promise, { sum } from './demo13';
+
+promise.then(() => {
+  console.log('sum', sum); // sum 3
+});
 ```
+这样我们必须在`promise`的`.then`函数中才能确保获取到正确的值，而当有内容需要从`demo14.ts`导出的时候，我们又需要继续导出`promise`。
+
+使用顶层`await`命令可以帮我们解决这个问题，并且可以在顶层作用域直接获取到正确的元素值：  
+```typescript
+// demo13.ts
+const { add } = await import('./demo12');
+const sum = add(1, 2);
+export { sum };
+
+// demo14.ts
+import { sum } from './demo13';
+console.log('sum', sum); // sum 3
+```
+这样书写之后和我们正常导入并没有什么区别。这个语法还在提案中，所以我们还不能使用，具体的提案信息在这里：[语法提案](https://github.com/tc39/proposal-top-level-await)
