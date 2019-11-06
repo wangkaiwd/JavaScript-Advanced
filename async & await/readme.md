@@ -418,3 +418,43 @@ const foo = await fooPromise;
 const bar = await barPromise;
 ```
 
+### 顶层`await`
+在`JavaScript`中，我们可以通过`import()`函数来异步加载一个模块。当我们想要使用`await`等到模块加载完毕做一些事情的时候，却发现我们还需要一个`async`函数才能使用`await`。这导致我们无法在顶层作用域中获取到对应的导入内容。
+
+顶层`await`就是借用`await`来解决模块异步加载的。
+
+我们先看一个通过`import()`函数异步加载的例子：
+```typescript
+// demo12.ts
+const add = (a: number, b: number): number => {
+  console.log('add');
+  return a + b;
+};
+export { add };
+
+// demo13.ts
+let sum: number;
+const getSum = async () => {
+  const { add } = await import('./demo12');
+  sum = add(1, 2);
+};
+getSum().then();
+export { sum };
+
+// demo14.ts
+import { sum } from './demo13';
+
+console.log('1', sum);
+
+setTimeout(() => {
+  console.log('2', sum);
+}, 1000);
+
+// 1 undefined
+// add
+// 2 3
+```
+这里能否获取到`sum`的值完全取决于代码的执行时间，我们可以将对应的`Promise`暴露出来，在`.then`函数中读取导入参数
+```typescript
+
+```
