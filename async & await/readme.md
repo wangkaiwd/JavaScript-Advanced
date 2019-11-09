@@ -164,8 +164,72 @@ Promise.race([promise1, promise2, promise3]).then(
 );
 ```
 
-#### 面试题
-串行，用点餐问题解决面试题
+#### `Promise`串行问题
+有些时候，我们需要根据`Promise`的执行时顺序并不是`Promise`完成的顺序来展示对应的信息。
+
+如：有`A`,`B`俩个按钮来触发俩个响应时间不同的`Promise`,最后我们要根据点击按钮的顺序在`input`输入框中展示点击对应顺序的文字。
+
+比如：  
+* 点击顺序： `A` -> `B` , 输入框展示顺序： `操作A` -> `操作B`
+* 点击顺序： `B` -> `A` , 输入框展示顺序： `操作B` -> `操作A`
+
+对应的代码实现如下：  
+```javascript
+const promiseA = () => {
+  return new Promise((resolve, reject) => {
+    setTimeout(() => {
+      resolve('操作A');
+    }, 8000);
+  });
+};
+
+const promiseB = () => {
+  return new Promise((resolve, reject) => {
+    setTimeout(() => {
+      resolve('操作B');
+    }, 4000);
+  });
+};
+
+const $ = (selector) => document.querySelector(selector);
+const $buttonA = $('#buttonA');
+const $buttonB = $('#buttonB');
+const $input = $('#input');
+
+// const queue = [{ key: 'A', value: '操作A' }, { key: 'B', value: '操作B' }];
+const array1 = [];
+let array2 = [];
+
+const ask = () => {
+  if (array1.length === 0) return;
+  const lastKey = array1[0].key;
+  const index2 = array2.findIndex(item => item.key === lastKey);
+  if (index2 !== -1) {
+    $input.value = array2[index2].value;
+    console.log(array2[index2].value);
+    array1.shift();
+    array2 = array2.filter(item => item.key !== lastKey);
+    ask();
+  }
+};
+$buttonA.addEventListener('click', () => {
+  array1.push({ key: 'A' });
+  promiseA().then(value => {
+    array2.push({ key: 'A', value });
+    ask();
+  });
+});
+
+$buttonB.addEventListener('click', () => {
+  array1.push({ key: 'B' });
+  promiseB().then(value => {
+    array2.push({ key: 'B', value });
+    ask();
+  });
+});
+```
+
+执行这段代码之后，我们页面中展示内容就会根据点击顺序进行显示
 
 #### `Promise`错误处理
 
