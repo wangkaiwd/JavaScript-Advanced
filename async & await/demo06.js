@@ -21,18 +21,32 @@ const $input = $('#input');
 
 // const queue = [{ key: 'A', value: '操作A' }, { key: 'B', value: '操作B' }];
 const array1 = [];
-const array2 = [];
+let array2 = [];
 
-const answer = (key, value) => {
+const answer = () => {
+  if (array1.length === 0) return;
+  const lastKey = array1[0].key;
+  const index2 = array2.findIndex(item => item.key === lastKey);
+  if (index2 !== -1) {
+    $input.value = array2[index2].value;
+    console.log(array2[index2].value);
+    array1.shift();
+    array2 = array2.filter(item => item.key !== lastKey);
+    answer();
+  }
 };
 $buttonA.addEventListener('click', () => {
-  queue.push({ key: 'A' });
-  promiseA().then(string => {
+  array1.push({ key: 'A' });
+  promiseA().then(value => {
+    array2.push({ key: 'A', value });
+    answer();
   });
 });
 
 $buttonB.addEventListener('click', () => {
-  queue.push({ key: 'B' });
-  promiseB().then(string => {
+  array1.push({ key: 'B' });
+  promiseB().then(value => {
+    array2.push({ key: 'B', value });
+    answer();
   });
 });
