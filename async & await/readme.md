@@ -200,6 +200,8 @@ const $input = $('#input');
 const array1 = [];
 let array2 = [];
 
+// 执行数组中的第一个如果满足条件的话，将其排除，继续用下一个与返回值队列进行匹配，依次执行
+// 如果不满足条件，则不进行任何操作
 const ask = () => {
   if (array1.length === 0) return;
   const lastKey = array1[0].key;
