@@ -51,6 +51,7 @@ Promise.reject('failed').then(null, (reason) => {
 > `Promise.all(iterable)`方法返回一个`Promise`实例，此实例在`iterable`参数内所有的`Promise`都完成(`resolved`)或参数中不包含`promise`时回调完成(`resolve`);如果参数中`promise`有一个失败(`rejected`)，此实例回调失败(`reject`),失败原因是第一失败`promise`的结果。
 
 将官方文档的内容整理一下，大概是这样一个意思： 
+
 * `Promise.all`返回值是一个`Promise`实例
 * 当传入的参数中的`promise`都处于`resolved`状态或者不包含`promise`时，该方法会返回一个成功状态的`promise`实例
 * 如果传入参数中有一个`promise`变成失败(`rejected`)状态，那么该方法返回一个失败状态的`promise`实例，并且参数是第一个失败`promise`的失败原因
@@ -170,6 +171,7 @@ Promise.race([promise1, promise2, promise3]).then(
 如：有`A`,`B`俩个按钮来触发俩个响应时间不同的`Promise`,最后我们要根据点击按钮的顺序在`input`输入框中展示点击对应顺序的文字。
 
 比如：  
+
 * 点击顺序： `A` -> `B` , 输入框展示顺序： `操作A` -> `操作B`
 * 点击顺序： `B` -> `A` , 输入框展示顺序： `操作B` -> `操作A`
 
