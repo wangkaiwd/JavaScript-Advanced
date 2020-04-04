@@ -147,6 +147,35 @@ console.log('object',object);
 // this {a:2, b:3}
 // object {a:2, b:3}
 ```
+下面是`mdn`中[`bind`](https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Global_Objects/Function/bind)作为构造函数使用的绑定函数的例子，笔者将其进行了整理，方便理解：
+```javascript
+// 创建构造函数Point
+function Point(x, y) {
+  this.x = x;
+  this.y = y;
+}
+
+// 为构造函数的原型添加toString方法
+Point.prototype.toString = function() { 
+  return this.x + ',' + this.y; 
+};
+
+// 创建构造函数的实例，并调用toString方法
+const p = new Point(1, 2);
+p.toString(); // '1,2'
+
+// 通过bind制定Point执行时的this=>window,第一个参数x=>0 
+const YAxisPoint = Point.bind(window, 0);
+
+// 通过new创建Point执行bind函数后返回值的实例，并为构造函数传入参数
+const axisPoint = new YAxisPoint(5);
+// 调用实例的toString方法，尽管bind将this => window,但是this还是指向了实例
+axisPoint.toString(); // '0,5'
+
+// instanceof: 实例进行原型链查找时可能会查找的原型的所属类为true
+axisPoint instanceof Point; // true
+axisPoint instanceof YAxisPoint; // true
+```
 
 根据`new`关键字的作用以及`bind`结合`new`关键字使用的例子我们可以得到如下结论：  
 * `bind`中绑定的`this`不会生效，还会使用调用`bind`的函数中的`this`
