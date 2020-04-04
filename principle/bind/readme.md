@@ -172,7 +172,7 @@ const axisPoint = new YAxisPoint(5);
 // 调用实例的toString方法，尽管bind将this => window,但是this还是指向了实例
 axisPoint.toString(); // '0,5'
 
-// instanceof: 实例进行原型链查找时可能会查找的原型的所属类为true
+// instanceof: 实例进行原型链查找时可能会查找的原型的所属类即为true
 axisPoint instanceof Point; // true
 axisPoint instanceof YAxisPoint; // true
 ```
