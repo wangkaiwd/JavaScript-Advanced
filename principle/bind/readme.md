@@ -192,8 +192,9 @@ const myBind = function (this: AnyFunction, context?: any, ...args1: any[]) {
     const isUseNew = this instanceof resultFn;
     return fn.call(isUseNew ? this : context, ...args1, ...args2);
   };
-  // 将添加到fn原型对象上的方法赋值到resultFn的原生对象上
-  resultFn.prototype = fn.prototype;
+  // 将添加到fn原型对象上的方法赋值到resultFn的原型上
+  // 原型链的查找过程如下: instance -> resultFn.prototype => fn.prototype => Object.prototype => null
+  resultFn.prototype = Object.create(fn.prototype);
   return resultFn;
 };
 ```
@@ -226,7 +227,7 @@ const myBind = function (this: AnyFunction, context?: any, ...args1: any[]) {
   // 在使用bind的时候，我们是将fn来作为构造函数的，并且在fn.prototype上绑定方法
   // 而我们最终在使用的时候，却是使用resultFn来作为构造函数的，然后将this传入到fn,
   // fn会帮我们将参数绑定到this上，但是不会帮我们绑定prototype,因为fn中的this现在已经指定了是外部的this
-  resultFn.prototype = fn.prototype;
+  resultFn.prototype = Object.create(fn.prototype);
   return resultFn;
 };
 ```
@@ -258,14 +259,94 @@ const _bind = function (this: AnyFunction) {
     const isUseNew = this instanceof resultFn;
     return fn.apply(isUseNew ? this : context, args1.concat(args2));
   };
-  resultFn.prototype = fn.prototype;
+  resultFn.prototype = Object.create(fn.prototype);
   return resultFn;
 };
 ```
 
 这里我们实现一个兼容性较好的版本。
 
-在`mdn`里也有对于`bind`的实现代码，可以用来参考： [传送门](https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Global_Objects/Function/bind#Compatibility)
+在`mdn`里也有对于`bind`的实现代码，下面是其实现代码：
+```javascript
+if (!Function.prototype.bind) (function(){
+  // 缓存数组原型上的slice方法
+  var ArrayPrototypeSlice = Array.prototype.slice;
+  Function.prototype.bind = function(otherThis) {
+    if (typeof this !== 'function') {
+      // closest thing possible to the ECMAScript 5
+      // internal IsCallable function
+      throw new TypeError('Function.prototype.bind - what is trying to be bound is not callable');
+    }
+    // 获取调用bind函数时时的除第一个参数的剩余所有参数
+    var baseArgs= ArrayPrototypeSlice.call(arguments, 1),
+        baseArgsLength = baseArgs.length,
+        fToBind = this, // 缓存fToBind，方便之后调用
+        fNOP    = function() {},
+        fBound  = function() {
+          // bind中传入的除this外的剩余参数的长度
+          baseArgs.length = baseArgsLength; // reset to default base arguments
+          // 将返回函数的参数放入到调用bind的参数(除this)中
+          baseArgs.push.apply(baseArgs, arguments);
+          // this 的原型链中含有fNOP的原型，说明对fBound使用了new关键字
+          // 当使用new关键字的时候要忽略bing指定的this
+          return fToBind.apply(
+                 fNOP.prototype.isPrototypeOf(this) ? this : otherThis, baseArgs
+          );
+        };
+    // 在调用bind方法时，会将调用bind函数的原型指向fNOP的原型
+    if (this.prototype) {
+      // Function.prototype doesn't have a prototype property
+      fNOP.prototype = this.prototype; 
+    }
+    // 将fBound.prototype的原型指向fNOP的proptotype
+    // 即 fBound.prototype.__proto__ = fNOP.prototype
+    // 所以原型链查找会多一级
+    // instance => fBound.prototype => fNOP.prototype
+    // 这里相当于 fBound.prototype = Object.create(fNOP.prototype)
+    fBound.prototype = new fNOP();
+
+    return fBound;
+  };
+})();
+```
+
+如果使用`new`关键字执行`bind`绑定后的函数的话，其实相当于在`bind`内部实现`fBound`对`fToBind`构造函数的继承：
+```javascript
+function fToBind(x,y) {
+  this.x = x;
+  this.y = y;
+}  
+fToBind.prototype.say = function (){
+  console.log('say',this.x,this.y)
+};
+function fNOP() {
+  
+}
+fNOP.prototype = fToBind.prototype
+function fBound(){
+  // 首先继承其私有属性
+  return fToBind.apply(this,arguments)  
+}
+
+// fBound.prototype 是 fNOP的实例，可以获取它的方法
+// new fNOP会返回一个新的对象，并将原型指向了fToBind
+fBound.prototype = new fNOP()
+fBoudn.prototype.constructor = fBound
+// 这里fBound为其原型添加的属性，都在fBound.prototype自身属性上，不会修改fNOP.prototype的内容
+```
+其实`Object.create`也为我们做了同样的事情，下面我们结合上面的代码模拟实现一个`Object.create`方法：
+```javascript
+// 用指定的原型创建一个新对象
+function create (proto) {
+  function Fn () {}
+
+  Fn.prototype = proto;
+  return new Fn();
+}
+const obj = create(Array.prototype);
+// obj.__proto__ === Array.prototype
+```
+`mdn`中对于`bind`的实现会涉及到`this`指向、`apply`方法、原型和原型链等相关的知识，希望上边的代码分析能让大家对这些知识有更深入的理解。
 
 ### 通过测试用例
 为了保证代码的准确性，要通过一些测试用例来测试代码。

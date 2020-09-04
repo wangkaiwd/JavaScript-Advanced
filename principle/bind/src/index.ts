@@ -12,7 +12,7 @@ const myBind = function (this: AnyFunction, thisArg?: any, ...args1: any[]) {
     const isUseNew = this instanceof resultFn;
     return fn.call(isUseNew ? this : thisArg, ...args1, ...args2);
   };
-  resultFn.prototype = fn.prototype;
+  resultFn.prototype = Object.create(fn.prototype);
   return resultFn;
 };
 
@@ -31,7 +31,7 @@ function _bind (this: AnyFunction) {
     return fn.apply(isUseNew ? this : context, arg1.concat(arg2));
   }
 
-  resultFn.prototype = fn.prototype;
+  resultFn.prototype = Object.create(fn.prototype);
   return resultFn;
 }
 
