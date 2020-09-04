@@ -263,8 +263,7 @@ const _bind = function (this: AnyFunction) {
   return resultFn;
 };
 ```
-
-这里我们实现一个兼容性较好的版本。
+这里我们实现了一个兼容性较好的版本。
 
 在`mdn`里也有对于`bind`的实现代码，下面是其实现代码：
 ```javascript
@@ -325,6 +324,7 @@ function fNOP() {
 fNOP.prototype = fToBind.prototype
 function fBound(){
   // 首先继承其私有属性
+  // 返回undefined会忽略，new会帮我们返回this
   return fToBind.apply(this,arguments)  
 }
 
@@ -339,7 +339,7 @@ fBoudn.prototype.constructor = fBound
 // 用指定的原型创建一个新对象
 function create (proto) {
   function Fn () {}
-
+  
   Fn.prototype = proto;
   return new Fn();
 }
